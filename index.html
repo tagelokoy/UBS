@@ -1,0 +1,1504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anodyne UBS Hardware</title>
+<meta name="description" content="Anodyne builds cells, lights, power, tools, radios and chargers for UBS, the open Universal Battery System.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Martian+Mono:wdth,wght@75..112.5,300..700&family=Noto+Sans+JP:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#E3E5E0; --bg-2:#D7DAD3; --paper:#EDEFEA;
+  --ink:#0C0E0D; --ink-2:#48504A; --ink-3:#737C75;
+  --line:rgba(12,14,13,.15); --line-2:rgba(12,14,13,.34); --grid:rgba(12,14,13,.055);
+  --li:#2FE070; --lfp:#FF6A1A; --na:#3F7CFF;
+  --li-ink:#0A7A35; --lfp-ink:#B4450A; --na-ink:#1F4FCC;
+  --dev:#CED2CB; --dev-2:#B3B8B1; --glass:rgba(150,185,170,.20);
+  --cap:#141716; --steel:#A3AAA5; --pcb:#1B2A23; --cell-ink:#0C0E0D;
+  --scr:#08090A; --scr-ink:#E9EEE8; --scr-dim:#7C8780; --warn:#FFD23F;
+  --fd:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --fm:"Martian Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --fj:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+  --gut:clamp(16px,4vw,56px); --max:1320px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D0F0E; --bg-2:#141715; --paper:#171A18;
+    --ink:#E3E6E1; --ink-2:#A2AAA4; --ink-3:#6E7770;
+    --line:rgba(227,230,225,.13); --line-2:rgba(227,230,225,.3); --grid:rgba(227,230,225,.045);
+    --li-ink:#45EC83; --lfp-ink:#FF8A47; --na-ink:#86A9FF;
+    --dev:#2A2F2C; --dev-2:#3A403C; --glass:rgba(150,210,185,.07); --steel:#8B928D;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D0F0E; --bg-2:#141715; --paper:#171A18;
+  --ink:#E3E6E1; --ink-2:#A2AAA4; --ink-3:#6E7770;
+  --line:rgba(227,230,225,.13); --line-2:rgba(227,230,225,.3); --grid:rgba(227,230,225,.045);
+  --li-ink:#45EC83; --lfp-ink:#FF8A47; --na-ink:#86A9FF;
+  --dev:#2A2F2C; --dev-2:#3A403C; --glass:rgba(150,210,185,.07); --steel:#8B928D;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fd);font-size:17px;line-height:1.55;font-stretch:100%;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--gut)}
+.mono{font-family:var(--fm);font-stretch:87%}
+.tag{font-family:var(--fm);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);font-stretch:87%}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:clamp(34px,5.6vw,76px);line-height:.95;font-weight:850;font-stretch:118%;text-transform:uppercase}
+h3{font-size:clamp(21px,2.3vw,28px);line-height:1.1;font-weight:760;font-stretch:108%}
+p{margin:0;max-width:64ch}
+.lede{font-size:clamp(17px,1.5vw,20px);color:var(--ink-2);max-width:58ch}
+.li-t{color:var(--li-ink)} .lfp-t{color:var(--lfp-ink)} .na-t{color:var(--na-ink)}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;height:58px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex:none}
+.brand b{font-weight:900;font-stretch:125%;font-size:17px;letter-spacing:.02em}
+.glyph{width:22px;height:22px;border:2px solid var(--ink);display:grid;place-items:center}
+.glyph::after{content:"";width:10px;height:2.5px;background:var(--ink)}
+.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-left:auto}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-family:var(--fm);font-stretch:87%;font-size:11px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:7px 10px;white-space:nowrap;border:1px solid transparent}
+.nav a:hover{border-color:var(--line-2)}
+.draft{font-family:var(--fm);font-stretch:87%;font-size:10px;letter-spacing:.08em;padding:5px 8px;border:1px solid var(--ink);white-space:nowrap;flex:none}
+@media (max-width:760px){.draft{display:none}.top .wrap{gap:12px}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding-block:clamp(40px,7vw,96px) clamp(32px,5vw,64px);overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,64px);align-items:center}
+@media (max-width:960px){.hero-grid{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(64px,11.5vw,168px);line-height:.84;font-weight:900;font-stretch:125%;text-transform:uppercase;letter-spacing:-.03em;margin-block:18px 26px}
+.hero h1 span{display:block}
+.hero .lede{color:var(--ink)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fm);font-stretch:87%;font-size:12px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:13px 18px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.btn.solid{background:var(--ink);color:var(--bg)}
+.btn:hover{background:var(--ink);color:var(--bg)}
+.btn.solid:hover{background:transparent;color:var(--ink)}
+.hero-fig{position:relative}
+.hero-fig svg{width:100%;height:auto;display:block}
+.jp{position:absolute;right:-4px;top:0;writing-mode:vertical-rl;font-family:var(--fj);font-weight:700;font-size:13px;letter-spacing:.35em;color:var(--ink-3)}
+@media (max-width:960px){.jp{display:none}}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1.5px solid var(--ink);margin-top:clamp(32px,5vw,56px)}
+.facts div{padding:14px 14px 0 0;display:flex;flex-direction:column;gap:2px}
+.facts b{font-size:clamp(30px,4vw,48px);font-weight:850;font-stretch:115%;line-height:1}
+@media (max-width:640px){.facts{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px}}
+
+.scan{animation:scan 3.2s cubic-bezier(.6,0,.3,1) .4s 1 both}
+@keyframes scan{from{transform:translateX(-80px)}to{transform:translateX(660px)}}
+.lead-line{stroke-dasharray:200;stroke-dashoffset:0;animation:draw 1.2s ease-out .6s 1 backwards}
+@keyframes draw{from{stroke-dashoffset:200}}
+@media (prefers-reduced-motion:reduce){.scan{display:none}.lead-line{animation:none}}
+
+/* ---------- ticker ---------- */
+.ticker{border-block:1.5px solid var(--ink);background:var(--ink);color:var(--bg);overflow:hidden;white-space:nowrap}
+.ticker-in{display:inline-flex;animation:tick 40s linear infinite}
+.ticker span{font-family:var(--fm);font-stretch:87%;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:11px 0}
+.ticker i{font-style:normal;padding-inline:22px;opacity:.5}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker-in{animation:none}}
+
+/* ---------- sections ---------- */
+.sec{padding-block:clamp(64px,9vw,128px);border-bottom:1px solid var(--line)}
+.sec.alt{background:var(--bg-2)}
+.sh{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin-bottom:clamp(32px,5vw,64px)}
+.sh-tag{display:flex;gap:10px;align-items:center}
+.sh-tag .k{background:var(--ink);color:var(--bg);padding:3px 7px}
+.sub{padding-top:clamp(48px,7vw,96px);margin-top:clamp(48px,7vw,96px);border-top:1px solid var(--line)}
+.sub-head{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(16px,4vw,56px);margin-bottom:clamp(24px,4vw,48px)}
+.sub-head .tag{padding-top:6px}
+.sub-head .body{display:grid;gap:14px}
+@media (max-width:800px){.sub-head{grid-template-columns:1fr}}
+
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:start}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+
+.panel{background:var(--paper);border:1px solid var(--line-2);position:relative}
+.drawing{background-color:var(--paper);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:20px 20px;background-position:-1px -1px}
+.drawing svg{display:block;width:100%;height:auto}
+.reg::before,.reg::after{content:"+";position:absolute;font-family:var(--fm);font-size:14px;line-height:1;color:var(--ink-3)}
+.reg::before{top:6px;left:8px}.reg::after{bottom:6px;right:8px}
+.fig-cap{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid var(--line-2);flex-wrap:wrap}
+
+/* SVG drawing language */
+.dv{fill:var(--dev);stroke:var(--ink);stroke-width:1.5;stroke-linejoin:round}
+.dv2{fill:var(--dev-2);stroke:var(--ink);stroke-width:1.5;stroke-linejoin:round}
+.gl{fill:var(--glass);stroke:var(--ink);stroke-width:1.5;stroke-linejoin:round}
+.ln{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.thin{fill:none;stroke:var(--ink);stroke-width:.8;opacity:.55}
+.dim{fill:none;stroke:var(--ink-2);stroke-width:.8}
+.dash{fill:none;stroke:var(--ink-2);stroke-width:1;stroke-dasharray:4 3}
+.ink{fill:var(--ink)} .inkS{fill:var(--ink);stroke:var(--ink)}
+.bgf{fill:var(--paper)}
+.lbl{font-family:var(--fm);font-stretch:87%;font-size:9.5px;letter-spacing:.06em;fill:var(--ink-2)}
+.lbl.k{fill:var(--ink);font-weight:600}
+.lbl-lg{font-family:var(--fd);font-weight:850;font-stretch:115%;fill:var(--ink)}
+.pcb{fill:var(--pcb);stroke:var(--ink);stroke-width:1}
+.chip{fill:#07090A;stroke:#3E574B;stroke-width:.6}
+.scr{fill:var(--scr)} .scr-t{fill:var(--scr-ink);font-family:var(--fm);font-stretch:87%}
+.steel{fill:var(--steel);stroke:var(--ink);stroke-width:1}
+.c-li{fill:var(--li)} .c-lfp{fill:var(--lfp)} .c-na{fill:var(--na)}
+.c-body{stroke:rgba(0,0,0,.45);stroke-width:.75}
+.c-cap{fill:var(--cap)} .c-band{fill:var(--cap)} .c-steel{fill:var(--steel);stroke:rgba(0,0,0,.5);stroke-width:.6}
+.c-ring{stroke:#8E9892;stroke-width:1.2;fill:none}
+.c-code{font-family:var(--fd);font-weight:850;font-stretch:100%;fill:var(--cell-ink);letter-spacing:-.01em}
+.c-fine{font-family:var(--fm);font-stretch:80%;fill:var(--cell-ink);opacity:.78;letter-spacing:.04em}
+.c-capt{font-family:var(--fm);font-stretch:80%;fill:#DDE3DE;letter-spacing:.06em}
+.c-bar{fill:var(--cell-ink)}
+.c-empty{fill:none;stroke:var(--ink-3);stroke-width:1.2;stroke-dasharray:5 4}
+.flow{stroke-dasharray:6 6;animation:flow 1s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-12}}
+@media (prefers-reduced-motion:reduce){.flow{animation:none}}
+
+/* ---------- not ours ---------- */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);border:1.5px solid var(--ink)}
+.split > div{padding:clamp(20px,3vw,36px);display:grid;gap:16px;align-content:start}
+.split > div + div{border-left:1.5px solid var(--ink)}
+.split .who{display:flex;align-items:center;gap:14px}
+.split ul{margin:0;padding:0;list-style:none;display:grid;gap:0;border-top:1px solid var(--line-2)}
+.split li{padding:9px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;font-size:15px}
+.split li span:last-child{font-family:var(--fm);font-stretch:87%;font-size:11px;letter-spacing:.06em;color:var(--ink-2);text-transform:uppercase;text-align:right}
+.ubs-mark{display:flex;align-items:flex-end;gap:3px;height:40px}
+.ubs-mark i{display:block;width:11px;border:2px solid var(--ink);border-top-width:5px}
+.ubs-mark i:nth-child(1){height:24px}.ubs-mark i:nth-child(2){height:32px;width:13px}.ubs-mark i:nth-child(3){height:40px;width:15px}
+.who b{font-size:30px;font-weight:900;font-stretch:125%;line-height:1}
+@media (max-width:760px){.split{grid-template-columns:1fr}.split > div + div{border-left:0;border-top:1.5px solid var(--ink)}}
+
+/* ---------- problem ---------- */
+.listing{display:grid;gap:0;border:1px solid var(--line-2);background:var(--paper)}
+.listing .row{padding:14px 16px;border-bottom:1px solid var(--line);display:grid;gap:6px}
+.listing .row:last-child{border-bottom:0}
+.listing .t{font-family:var(--fd);font-stretch:95%;font-size:15px;font-weight:600}
+.listing mark{background:none;color:inherit;border-bottom:2px solid var(--lfp);padding-bottom:1px}
+.listing .n{font-family:var(--fm);font-stretch:87%;font-size:11.5px;color:var(--lfp-ink);letter-spacing:.02em}
+.cmp{width:100%;border-collapse:collapse;font-size:15px}
+.cmp th,.cmp td{text-align:left;padding:11px 12px 11px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.cmp th{font-family:var(--fm);font-stretch:87%;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);font-weight:500}
+.cmp td:first-child{font-family:var(--fm);font-stretch:87%;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);width:24%}
+.cmp td:last-child{font-weight:650}
+.scroll-x{overflow-x:auto}
+
+.life{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1.5px solid var(--ink);margin-top:clamp(40px,6vw,72px)}
+.life > div{padding:16px 16px 0 0;display:grid;gap:8px;align-content:start}
+.life .y{font-weight:850;font-stretch:120%;font-size:clamp(22px,2.4vw,30px);line-height:1}
+.life p{font-size:15px;color:var(--ink-2)}
+@media (max-width:900px){.life{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:18px}}
+@media (max-width:480px){.life{grid-template-columns:1fr}}
+
+/* ---------- standard ---------- */
+.rules{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;border:1.5px solid var(--ink)}
+.rules a{padding:18px;text-decoration:none;display:grid;gap:10px;align-content:start;border-right:1px solid var(--line-2)}
+.rules a:last-child{border-right:0}
+.rules a:hover{background:var(--ink);color:var(--bg)}
+.rules a:hover .tag{color:var(--bg)}
+.rules b{font-size:19px;font-weight:760;font-stretch:108%;line-height:1.15}
+@media (max-width:980px){.rules{grid-template-columns:repeat(2,minmax(0,1fr))}.rules a{border-bottom:1px solid var(--line-2)}.rules a:nth-child(2n){border-right:0}}
+@media (max-width:480px){.rules{grid-template-columns:1fr}.rules a{border-right:0}}
+
+.fmt-table{width:100%;border-collapse:collapse}
+.fmt-table th,.fmt-table td{padding:12px 12px 12px 0;border-bottom:1px solid var(--line);text-align:left;font-variant-numeric:tabular-nums}
+.fmt-table th{font-family:var(--fm);font-stretch:87%;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);font-weight:500}
+.fmt-table td b{font-size:26px;font-weight:900;font-stretch:120%}
+.note{font-size:14.5px;color:var(--ink-2);border-left:3px solid var(--ink);padding:4px 0 4px 14px;max-width:60ch}
+
+.chem-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2vw,20px)}
+@media (max-width:860px){.chem-grid{grid-template-columns:1fr}}
+.chem{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;padding:20px;background:var(--paper);border:1px solid var(--line-2);align-items:start}
+.chem svg{width:56px;height:auto}
+.chem .sw{display:flex;align-items:center;gap:8px}
+.chem .sw i{width:12px;height:12px;display:block}
+.chem h3{margin-block:6px 10px}
+.chem dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
+.chem dt{font-family:var(--fm);font-stretch:87%;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);padding-top:2px}
+.chem dd{margin:0}
+.chem.reserved{border-style:dashed}
+.chem .res{font-family:var(--fm);font-size:10px;letter-spacing:.08em;border:1px dashed var(--ink-2);padding:2px 6px;color:var(--ink-2)}
+
+.kv{margin:0;display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);border-top:1px solid var(--line-2)}
+.kv dt,.kv dd{padding:9px 0;border-bottom:1px solid var(--line);margin:0}
+.kv dt{font-family:var(--fm);font-stretch:87%;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);padding-right:18px}
+.kv dd{font-variant-numeric:tabular-nums;font-size:15px}
+
+/* rating anatomy + decoder */
+.anat{display:flex;align-items:flex-end;gap:clamp(8px,2vw,22px);flex-wrap:wrap;margin-block:6px 10px}
+.anat > div{display:grid;gap:8px;justify-items:start}
+.anat .g{font-size:clamp(64px,10vw,132px);font-weight:900;font-stretch:118%;line-height:.8;letter-spacing:-.02em}
+.anat .g.dot{color:var(--ink-3)}
+.anat .tag{border-top:2px solid var(--ink);padding-top:6px;min-width:5ch;max-width:11ch}
+.dec{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);border:1.5px solid var(--ink);background:var(--paper)}
+@media (max-width:900px){.dec{grid-template-columns:1fr}}
+.dec-in{padding:clamp(18px,2.5vw,28px);display:grid;gap:22px;align-content:start;border-right:1.5px solid var(--ink)}
+@media (max-width:900px){.dec-in{border-right:0;border-bottom:1.5px solid var(--ink)}}
+.dec-out{padding:clamp(18px,2.5vw,28px);display:grid;gap:18px;align-content:start}
+.field{display:grid;gap:8px}
+.field label.tag,.field .tag{display:flex;justify-content:space-between}
+.seg{display:flex;flex-wrap:wrap;border:1.5px solid var(--ink);width:max-content;max-width:100%}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{font-family:var(--fm);font-stretch:87%;font-size:12px;letter-spacing:.06em;padding:9px 14px;cursor:pointer;border-right:1px solid var(--line-2);user-select:none}
+.seg label:last-of-type{border-right:0}
+.seg input:checked + label{background:var(--ink);color:var(--bg)}
+.seg input:focus-visible + label{outline:2px solid var(--ink);outline-offset:2px}
+input[type=range]{width:100%;accent-color:var(--ink)}
+.out-code{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.out-code b{font-size:clamp(56px,8vw,104px);font-weight:900;font-stretch:118%;line-height:.85;letter-spacing:-.02em}
+.out-code .tag{color:var(--ink)}
+.ladder{display:grid;grid-template-columns:auto repeat(10,minmax(0,1fr));gap:3px;align-items:stretch}
+.ladder .h{font-family:var(--fm);font-stretch:87%;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);padding-right:10px;align-self:center}
+.ladder .s{border:1px solid var(--line-2);padding:6px 2px 5px;text-align:center;display:grid;gap:1px;min-width:0}
+.ladder .s b{font-size:16px;font-weight:850;line-height:1}
+.ladder .s small{font-family:var(--fm);font-stretch:75%;font-size:8.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden}
+.ladder .s.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ladder .s.on small{color:var(--bg)}
+.warnbox{font-family:var(--fm);font-stretch:87%;font-size:12px;padding:10px 12px;background:repeating-linear-gradient(-45deg,rgba(255,210,63,.28) 0 8px,transparent 8px 16px);border:1.5px solid var(--ink)}
+
+/* ---------- cells ---------- */
+.cells{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1.5px solid var(--ink);border-left:1px solid var(--line-2)}
+@media (max-width:980px){.cells{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cellcard{border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);padding:18px;display:grid;grid-template-rows:auto auto 1fr auto;gap:14px;background:var(--paper)}
+.cellcard .fig{height:210px;display:flex;align-items:flex-end;justify-content:center;border-bottom:1px dashed var(--line-2);padding-bottom:10px}
+.cellcard .fig svg{height:100%;width:auto}
+.cellcard .code{font-size:clamp(32px,3.4vw,44px);font-weight:900;font-stretch:118%;line-height:.9}
+.cellcard dl{margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
+.cellcard dt{font-family:var(--fm);font-stretch:87%;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.cellcard dd{margin:0;font-variant-numeric:tabular-nums;font-size:14.5px;font-weight:600}
+.cellcard .foot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);padding-top:10px}
+.price{font-weight:800;font-stretch:110%;font-size:18px}
+@media (max-width:480px){.cellcard{padding:12px}.cellcard .fig{height:170px}.cellcard dl{grid-template-columns:1fr}}
+
+.bundle{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:center;justify-content:space-between;padding:18px 20px;border:1.5px solid var(--ink);margin-top:clamp(16px,2vw,24px)}
+.bundle b{font-size:20px;font-weight:800;font-stretch:110%}
+
+/* ---------- products ---------- */
+.prod{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:0;border:1.5px solid var(--ink);background:var(--paper)}
+.prod + .prod{margin-top:clamp(18px,2.5vw,28px)}
+@media (max-width:900px){.prod{grid-template-columns:1fr}}
+.prod .drawing{border-right:1.5px solid var(--ink);padding:clamp(12px,2vw,24px);display:flex;align-items:center}
+@media (max-width:900px){.prod .drawing{border-right:0;border-bottom:1.5px solid var(--ink)}}
+.prod .info{padding:clamp(18px,2.5vw,30px);display:grid;gap:16px;align-content:start}
+.pcode{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.pcode b{font-size:clamp(48px,6vw,80px);font-weight:900;font-stretch:120%;line-height:.82;letter-spacing:-.02em}
+.pcode span{font-family:var(--fm);font-stretch:87%;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+.ch .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1.5px solid var(--ink);padding-top:14px;flex-wrap:wrap}
+.prod .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1.5px solid var(--ink);padding-top:14px;flex-wrap:wrap}
+.empty-badge{font-family:var(--fm);font-stretch:87%;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;border:1.5px dashed var(--ink)}
+.variants{display:flex;flex-wrap:wrap;gap:8px}
+.variants span{font-family:var(--fm);font-stretch:87%;font-size:11px;padding:5px 8px;border:1px solid var(--line-2)}
+
+/* ---------- chargers ---------- */
+.ch-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,2.5vw,28px)}
+@media (max-width:860px){.ch-row{grid-template-columns:1fr}}
+.ch{border:1.5px solid var(--ink);background:var(--paper);display:grid;grid-template-rows:auto 1fr}
+.ch .drawing{border-bottom:1.5px solid var(--ink);padding:12px}
+.ch .info{padding:clamp(18px,2.5vw,26px);display:grid;gap:14px;align-content:start}
+.barrel{margin-top:clamp(16px,2.5vw,28px);border:1.5px solid var(--ink);background:var(--paper);display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr)}
+@media (max-width:900px){.barrel{grid-template-columns:1fr}}
+.barrel .drawing{border-right:1.5px solid var(--ink);padding:clamp(12px,2vw,28px);display:grid;gap:14px;justify-items:center}
+@media (max-width:900px){.barrel .drawing{border-right:0;border-bottom:1.5px solid var(--ink)}}
+.barrel .drawing svg{max-width:460px}
+#rot{transition:transform .7s cubic-bezier(.5,0,.2,1);transform-box:view-box;transform-origin:200px 200px}
+#rot text{transition:transform .7s cubic-bezier(.5,0,.2,1);transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){#rot,#rot text{transition:none}}
+.dial-ctl{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.barrel .info{padding:clamp(18px,2.5vw,30px);display:grid;gap:18px;align-content:start}
+.screen{background:var(--scr);color:var(--scr-ink);font-family:var(--fm);font-stretch:87%;padding:18px;display:grid;gap:12px;border:1.5px solid var(--ink);box-shadow:inset 0 0 0 4px #1A1D1B}
+.screen .row{display:flex;justify-content:space-between;gap:10px;font-size:10.5px;letter-spacing:.08em;color:var(--scr-dim);text-transform:uppercase}
+.screen .big{font-family:var(--fd);font-stretch:118%;font-weight:900;font-size:clamp(44px,5vw,64px);line-height:.85;display:flex;align-items:center;gap:14px}
+.screen .big i{width:16px;height:44px;display:block;border:1px solid #444}
+.screen .state{font-size:13px;letter-spacing:.06em;padding:8px 10px;border:1px solid #2B302D;text-transform:uppercase}
+.screen .state.retire{background:var(--warn);color:#0C0E0D;border-color:var(--warn)}
+.screen dl{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.screen dt{font-size:9.5px;letter-spacing:.09em;color:var(--scr-dim);text-transform:uppercase}
+.screen dd{margin:0;font-size:15px;font-variant-numeric:tabular-nums}
+.soh{display:grid;grid-template-columns:repeat(20,1fr);gap:2px;height:14px}
+.soh i{background:#262B28}
+.soh i.on{background:var(--scr-ink)}
+.soh i.low{background:var(--warn)}
+.pool{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+@media (max-width:420px){.pool{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.pool button{font:inherit;font-family:var(--fm);font-stretch:80%;font-size:10px;padding:7px 2px;border:1px solid var(--line-2);background:transparent;color:var(--ink);cursor:pointer;display:grid;gap:3px;justify-items:center;letter-spacing:.03em}
+.pool button i{width:100%;height:4px;display:block}
+.pool button[aria-pressed="true"]{border:1.5px solid var(--ink);background:var(--ink);color:var(--bg)}
+
+/* ---------- bay ---------- */
+.bay{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);border:1.5px solid var(--ink);background:var(--paper)}
+@media (max-width:900px){.bay{grid-template-columns:1fr}}
+.bay .drawing{border-right:1.5px solid var(--ink);padding:clamp(12px,2vw,24px)}
+@media (max-width:900px){.bay .drawing{border-right:0;border-bottom:1.5px solid var(--ink)}}
+.bay .ctl{padding:clamp(18px,2.5vw,28px);display:grid;gap:18px;align-content:start}
+select{font:inherit;font-family:var(--fm);font-stretch:87%;font-size:12.5px;padding:10px 12px;border:1.5px solid var(--ink);background:var(--paper);color:var(--ink);width:100%;border-radius:0}
+.slots{display:grid;gap:8px}
+.slots label{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center}
+.readout{display:grid;grid-template-columns:1fr 1fr;border-top:1.5px solid var(--ink)}
+.readout div{padding:12px 12px 12px 0;border-bottom:1px solid var(--line);display:grid;gap:2px}
+.readout b{font-size:clamp(24px,2.6vw,32px);font-weight:850;font-stretch:112%;line-height:1;font-variant-numeric:tabular-nums}
+.status{font-family:var(--fm);font-stretch:87%;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:9px 11px;border:1.5px solid var(--ink)}
+.status.ok{background:var(--ink);color:var(--bg)}
+.status.warn{background:repeating-linear-gradient(-45deg,rgba(255,210,63,.35) 0 8px,transparent 8px 16px)}
+.why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1.5px solid var(--ink);margin-top:clamp(24px,4vw,40px)}
+.why > div{padding:16px 18px 0 0;display:grid;gap:8px;align-content:start}
+.why p{font-size:15px;color:var(--ink-2)}
+@media (max-width:760px){.why{grid-template-columns:1fr}}
+
+/* ---------- spec ---------- */
+.glance{width:100%;border-collapse:collapse;min-width:620px}
+.glance th,.glance td{padding:12px 14px 12px 0;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:15px}
+.glance th{font-family:var(--fm);font-stretch:87%;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);font-weight:500}
+.glance td:first-child{font-weight:800;font-stretch:112%;white-space:nowrap}
+.glance td:nth-child(2){font-family:var(--fm);font-stretch:87%;font-size:11px;color:var(--ink-2);white-space:nowrap}
+.oq{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1.5px solid var(--ink)}
+.oq > div{padding:18px 20px 18px 0;border-bottom:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.oq h3{font-size:19px}
+.oq p{font-size:15px;color:var(--ink-2)}
+@media (max-width:760px){.oq{grid-template-columns:1fr}}
+
+footer{padding-block:clamp(48px,7vw,88px) 40px;background:var(--ink);color:var(--bg)}
+footer .big{font-size:clamp(56px,14vw,200px);font-weight:900;font-stretch:125%;line-height:.8;letter-spacing:-.03em}
+footer .cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:40px;padding-top:18px;border-top:1px solid rgba(128,128,128,.4)}
+footer .cols p{font-size:14px;opacity:.8}
+footer .tag{color:inherit;opacity:.6}
+@media (max-width:760px){footer .cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="cylH" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".42"/>
+      <stop offset=".16" stop-color="#fff" stop-opacity=".12"/>
+      <stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".86" stop-color="#000" stop-opacity=".16"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".34"/>
+    </linearGradient>
+    <linearGradient id="scanG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".8" stop-color="#fff" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Anodyne home"><span class="glyph" aria-hidden="true"></span><b>ANODYNE</b></a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#standard">Standard</a>
+      <a href="#cells">Cells</a>
+      <a href="#products">Hardware</a>
+      <a href="#chargers">Chargers</a>
+      <a href="#bay">Bay</a>
+      <a href="#spec">Spec</a>
+    </nav>
+    <span class="draft">UBS DRAFT 0.3</span>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <div class="tag">Anodyne · Hardware for the Universal Battery System</div>
+        <h1><span>Ships</span><span>empty.</span></h1>
+        <p class="lede">Every Anodyne product arrives without a battery. It runs on UBS cells, the open standard for rechargeable cells. Buy cells once, move them between the things you own, and track their health on one charger. When a device breaks, its cells move on.</p>
+        <div class="cta">
+          <a class="btn solid" href="#standard">How UBS works <span aria-hidden="true">↓</span></a>
+          <a class="btn" href="#products">See the hardware</a>
+        </div>
+      </div>
+      <div class="hero-fig">
+        <span class="jp" lang="ja">汎用バッテリーシステム</span>
+        <div id="hero-svg"></div>
+      </div>
+    </div>
+    <div class="facts">
+      <div><b class="num">3</b><span class="tag">Sizes · B, BB, BBB</span></div>
+      <div><b class="num">2+1</b><span class="tag">Chemistries · 1 reserved</span></div>
+      <div><b class="num">1</b><span class="tag">Code for energy + power</span></div>
+      <div><b class="num">0</b><span class="tag">Proprietary packs</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-in">
+    <span>UBS is an open standard<i>/</i>Anodyne is one of its builders<i>/</i>Any UBS cell · any UBS device<i>/</i>Ships empty<i>/</i>Cells outlive devices<i>/</i>Draft 0.3 · open for comment<i>/</i></span>
+    <span>UBS is an open standard<i>/</i>Anodyne is one of its builders<i>/</i>Any UBS cell · any UBS device<i>/</i>Ships empty<i>/</i>Cells outlive devices<i>/</i>Draft 0.3 · open for comment<i>/</i></span>
+  </div>
+</div>
+
+<!-- ================= NOT OURS ================= -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">00</span><span>Who owns what</span></div>
+      <h2>UBS isn't ours.</h2>
+      <p class="lede">The Universal Battery System is an open specification. It's free to read and free to build. Anyone can make UBS cells, chargers or devices without asking or paying anyone. Anodyne is one company that builds for it. Our cells work in any UBS device, and any UBS cell works in ours.</p>
+    </div>
+    <div class="split">
+      <div>
+        <div class="who"><span class="ubs-mark" aria-hidden="true"><i></i><i></i><i></i></span><b>UBS</b></div>
+        <div class="tag">The standard · open · royalty-free · CC BY 4.0</div>
+        <ul>
+          <li><span>Three cell sizes</span><span>§1</span></li>
+          <li><span>Chemistry colors and bands</span><span>§2</span></li>
+          <li><span>Mandatory protection circuit</span><span>§3</span></li>
+          <li><span>Cell passport</span><span>§4</span></li>
+          <li><span>The rating code</span><span>§5</span></li>
+          <li><span>Bays for devices</span><span>§6 · optional</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="who"><span class="glyph" aria-hidden="true" style="width:34px;height:34px;border-width:3px"></span><b>ANODYNE</b></div>
+        <div class="tag">The company · builds to the spec · rates in public</div>
+        <ul>
+          <li><span>Cells</span><span>8 SKUs</span></li>
+          <li><span>FL-1 Wick flashlight</span><span>Light</span></li>
+          <li><span>PB Stack power bank</span><span>Power</span></li>
+          <li><span>DR-1 Brace drill driver</span><span>Tool</span></li>
+          <li><span>RX-1 Relay radio</span><span>Signal</span></li>
+          <li><span>CH-1 · CH-4 · CH-12 chargers</span><span>Charge</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROBLEM ================= -->
+<section class="sec alt">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">01</span><span>The problem</span></div>
+      <h2>Batteries die with the wrong thing.</h2>
+      <p class="lede">Most rechargeable things glue a battery pack inside. Sometimes the cells outlast the device, sometimes the device outlasts the cells. Either way, both go in the bin together. Loose cells exist, but buying them is a specialist hobby.</p>
+    </div>
+    <div class="two">
+      <div>
+        <div class="tag" style="margin-bottom:10px">Typical loose-cell listings today</div>
+        <div class="listing">
+          <div class="row"><div class="t">18650 Battery <mark>9900mAh</mark> 3.7V Rechargeable Li-ion (4 pack)</div><div class="n">↳ No 18650 cell holds 9900 mAh. The best hold about 3600.</div></div>
+          <div class="row"><div class="t">18650 <mark>Flat Top</mark> High Drain 3000mAh</div><div class="n">↳ Flat top won't touch the contacts in many devices. Button top won't fit in others.</div></div>
+          <div class="row"><div class="t">18650 <mark>Protected</mark> Button Top 3500mAh, 69.5mm</div><div class="n">↳ Protected cells are 2 to 5 mm longer. Some devices won't close.</div></div>
+          <div class="row"><div class="t">18650 <mark>LiFePO4</mark> 3.2V 1800mAh</div><div class="n">↳ Same size as Li-ion, different voltage, often identical wrap colors.</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="tag" style="margin-bottom:10px">What UBS fixes</div>
+        <div class="scroll-x">
+        <table class="cmp">
+          <thead><tr><th scope="col">Question</th><th scope="col">Today</th><th scope="col">With UBS</th></tr></thead>
+          <tbody>
+            <tr><td>Size</td><td>18650, 21700, 14500, plus length variants</td><td>B, BB, BBB. One length each.</td></tr>
+            <tr><td>Terminal</td><td>Flat top or button top</td><td>Button top, always</td></tr>
+            <tr><td>Safety</td><td>Protected, sometimes</td><td>Protected, always</td></tr>
+            <tr><td>Chemistry</td><td>Read the fine print</td><td>Color and bands</td></tr>
+            <tr><td>Rating</td><td>"Up to 9900 mAh"</td><td>BB·74, tested to a public method</td></tr>
+            <tr><td>Health</td><td>Unknown</td><td>Stored in the cell's passport</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="life" aria-label="A cell's life with UBS">
+      <div><span class="tag">Year 0</span><span class="y">4 cells</span><p>You buy a drill and four BB cells. The drill takes two, the other two go in a flashlight.</p></div>
+      <div><span class="tag">Year 1</span><span class="y">+1 device</span><p>A game controller arrives without a battery. It takes two cells from the flashlight.</p></div>
+      <div><span class="tag">Year 3</span><span class="y">Drill dies</span><p>The motor fails. Its two cells go into a radio. Nothing gets thrown out that still works.</p></div>
+      <div><span class="tag">Year 5</span><span class="y">1 retired</span><p>The charger flags one cell at 68% health. You recycle that cell. Only that cell.</p></div>
+      <div><span class="tag">Year 6</span><span class="y">3 running</span><p>The other three are in their fourth and fifth devices, still charging on the same charger.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STANDARD ================= -->
+<section class="sec" id="standard">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">UBS</span><span>The standard · Draft 0.3</span></div>
+      <h2>Five rules. The rest is up to the device.</h2>
+      <p class="lede">UBS is deliberately small. It defines the cell, how the cell tells you what it is, and how it keeps itself safe. Devices are free to be whatever they want around it.</p>
+    </div>
+    <nav class="rules" aria-label="UBS rules">
+      <a href="#s1"><span class="tag">§1</span><b>Three sizes with fixed dimensions</b></a>
+      <a href="#s2"><span class="tag">§2</span><b>Color and bands mark the chemistry</b></a>
+      <a href="#s3"><span class="tag">§3</span><b>Every cell is protected</b></a>
+      <a href="#s3"><span class="tag">§4</span><b>Every cell carries a passport</b></a>
+      <a href="#s5"><span class="tag">§5</span><b>One code rates energy and power</b></a>
+    </nav>
+
+    <!-- §1 -->
+    <div class="sub" id="s1">
+      <div class="sub-head">
+        <div class="tag">§1 · Formats</div>
+        <div class="body">
+          <h3>Three sizes, named the way you already name batteries.</h3>
+          <p>UBS borrows the letter logic of AA and AAA: more letters, smaller cell. Each size is built on a cell format that is already made by the billion. The outer size is fixed and includes the protection circuit, so a BB is always 69.0 mm long.</p>
+        </div>
+      </div>
+      <div class="two">
+        <figure class="panel drawing reg" style="margin:0">
+          <div id="fmt-svg" style="padding:16px 12px 4px"></div>
+          <figcaption class="fig-cap"><span class="tag">Drawn to scale · 1 : 1.4 on a 13" screen</span><span class="tag">AA shown for reference</span></figcaption>
+        </figure>
+        <div style="display:grid;gap:22px">
+          <div class="scroll-x">
+          <table class="fmt-table">
+            <thead><tr><th scope="col">Size</th><th scope="col">Built on</th><th scope="col">Outer size</th><th scope="col">Typical energy</th></tr></thead>
+            <tbody>
+              <tr><td><b>BBB</b></td><td class="mono">14500</td><td class="num">Ø14.5 × 53.0 mm</td><td class="num">2–4 Wh</td></tr>
+              <tr><td><b>BB</b></td><td class="mono">18650</td><td class="num">Ø18.6 × 69.0 mm</td><td class="num">6–13 Wh</td></tr>
+              <tr><td><b>B</b></td><td class="mono">21700</td><td class="num">Ø21.7 × 75.0 mm</td><td class="num">9–18 Wh</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <dl class="kv">
+            <dt>Positive</dt><dd>Button top, Ø7 mm minimum, with passport ring</dd>
+            <dt>Negative</dt><dd>Flat, full diameter</dd>
+            <dt>Tolerance</dt><dd>±0.2 mm on every dimension</dd>
+            <dt>Room to grow</dt><dd>A is reserved for a larger future size</dd>
+          </dl>
+          <p class="note">BBB has the same diameter as an AA but runs at 3.2–3.6 V instead of 1.5 V. It is 2.5 mm longer on purpose, so it won't close into most AA compartments. Whether that is enough is an open question for draft 0.4.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- §2 -->
+    <div class="sub" id="s2">
+      <div class="sub-head">
+        <div class="tag">§2 · Chemistry</div>
+        <div class="body">
+          <h3>Color says the chemistry. Bands say it again.</h3>
+          <p>About one in twelve men has some form of color blindness, and green against orange is one of the hardest pairs. So every UBS cell also carries dark bands near its negative end: one for Li-ion, two for LiFePO₄, three for sodium-ion. You can read them by touch, too.</p>
+        </div>
+      </div>
+      <div class="chem-grid" id="chem-grid"></div>
+      <p class="note" style="margin-top:22px">Device rule: a UBS device must run on every approved chemistry in its size. Today that means accepting 2.0 to 4.2 V per cell. Chargers pick the charge profile from the passport, never from a guess.</p>
+    </div>
+
+    <!-- §3 + §4 -->
+    <div class="sub" id="s3">
+      <div class="sub-head">
+        <div class="tag">§3 · Protection &nbsp;/&nbsp; §4 · Passport</div>
+        <div class="body">
+          <h3>Every cell protects itself and remembers its own life.</h3>
+          <p>Unprotected cells are fine for people who know battery safety. A standard for everyone can't assume that. Every UBS cell carries a protection circuit in its cap, so a cell in a pocket full of keys, a cheap device or a broken charger stays safe.</p>
+          <p>The same cap holds a small memory chip: the passport. It talks over a thin ring around the positive terminal. Chargers read and write it. Devices may log to it. A device that ignores it still works. No account, no app, no cloud.</p>
+        </div>
+      </div>
+      <div class="two">
+        <figure class="panel drawing reg" style="margin:0">
+          <div id="cap-svg" style="padding:12px"></div>
+          <figcaption class="fig-cap"><span class="tag">Positive cap, exploded</span><span class="tag">Adds ≈ 3 mm to cell length</span></figcaption>
+        </figure>
+        <div style="display:grid;gap:26px">
+          <div>
+            <div class="tag" style="margin-bottom:8px">§3 · Protection limits · Li-ion shown</div>
+            <dl class="kv">
+              <dt>Overcharge cut-off</dt><dd class="num">4.25 V (LiFePO₄ 3.75 V)</dd>
+              <dt>Over-discharge cut-off</dt><dd class="num">2.50 V (LiFePO₄ 2.00 V)</dd>
+              <dt>Over-current</dt><dd class="num">1.3 × the rated continuous current</dd>
+              <dt>Short circuit</dt><dd class="num">Open in under 1 ms, self-resetting</dd>
+              <dt>Temperature</dt><dd class="num">Charge 0–45 °C · cut-off at 80 °C</dd>
+            </dl>
+          </div>
+          <div>
+            <div class="tag" style="margin-bottom:8px">§4 · Passport fields · example</div>
+            <dl class="kv">
+              <dt>Serial</dt><dd class="mono" style="font-size:13px">UBS-BB-LI-7K2F-0918</dd>
+              <dt>Rated</dt><dd class="num">BB·74 · 3500 mAh · 10 A</dd>
+              <dt>Made</dt><dd class="num">2026-03</dd>
+              <dt>Cycles</dt><dd class="num">212</dd>
+              <dt>Health</dt><dd class="num">91% of rated capacity · 31 mΩ</dd>
+              <dt>Last host</dt><dd>RX-1 Relay · 4 days ago</dd>
+              <dt>Peak temp.</dt><dd class="num">47 °C</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- §5 -->
+    <div class="sub" id="s5">
+      <div class="sub-head">
+        <div class="tag">§5 · Rating code</div>
+        <div class="body">
+          <h3>One code for energy and power.</h3>
+          <p>A cell has two numbers that matter: how much energy it holds and how hard it can be pushed. Inside one size, they trade off against each other. UBS writes both into a two-digit code, the same way IP67 packs dust and water protection into one mark. A higher first digit runs longer. A higher second digit pushes harder.</p>
+        </div>
+      </div>
+      <div class="anat" aria-label="BB·74 means size BB, energy class 7, power class 4">
+        <div><span class="g">BB</span><span class="tag">Size</span></div>
+        <div><span class="g dot">·</span></div>
+        <div><span class="g">7</span><span class="tag">Energy ≥ 12 Wh</span></div>
+        <div><span class="g">4</span><span class="tag">Power ≥ 35 W</span></div>
+      </div>
+      <p class="note" style="margin-bottom:28px">Devices print what they need the same way: <b>UBS BB · P5</b> means any BB cell with a power class of 5 or higher runs the device at full power. A weaker cell still works; the device throttles.</p>
+
+      <div class="dec" id="decoder">
+        <div class="dec-in">
+          <div class="tag" style="color:var(--ink)">Rating calculator</div>
+          <div class="field">
+            <span class="tag">Size</span>
+            <div class="seg" role="radiogroup" aria-label="Size">
+              <input type="radio" name="d-fmt" id="d-fmt-BBB" value="BBB"><label for="d-fmt-BBB">BBB</label>
+              <input type="radio" name="d-fmt" id="d-fmt-BB" value="BB" checked><label for="d-fmt-BB">BB</label>
+              <input type="radio" name="d-fmt" id="d-fmt-B" value="B"><label for="d-fmt-B">B</label>
+            </div>
+          </div>
+          <div class="field">
+            <span class="tag">Chemistry</span>
+            <div class="seg" role="radiogroup" aria-label="Chemistry">
+              <input type="radio" name="d-chem" id="d-chem-li" value="li" checked><label for="d-chem-li">Li-ion</label>
+              <input type="radio" name="d-chem" id="d-chem-lfp" value="lfp"><label for="d-chem-lfp">LiFePO₄</label>
+              <input type="radio" name="d-chem" id="d-chem-na" value="na"><label for="d-chem-na">Na-ion*</label>
+            </div>
+          </div>
+          <div class="field">
+            <label class="tag" for="d-mah"><span>Capacity</span><span class="num" id="d-mah-v" style="color:var(--ink)">3500 mAh</span></label>
+            <input type="range" id="d-mah" min="400" max="6000" step="50" value="3500">
+          </div>
+          <div class="field">
+            <label class="tag" for="d-amp"><span>Continuous current</span><span class="num" id="d-amp-v" style="color:var(--ink)">10 A</span></label>
+            <input type="range" id="d-amp" min="1" max="50" step="1" value="10">
+          </div>
+          <p style="font-size:13.5px;color:var(--ink-2)">Energy = capacity × nominal voltage. Power = continuous current × nominal voltage, measured at 25 °C with the cell surface kept under 70 °C. *Sodium-ion is reserved, not yet approved.</p>
+        </div>
+        <div class="dec-out">
+          <div class="out-code"><b id="d-code">BB·74</b><span class="tag num" id="d-sum">12.6 Wh · 36 W</span></div>
+          <div id="d-cell"></div>
+          <div class="ladder" id="d-e"></div>
+          <div class="ladder" id="d-p"></div>
+          <div class="warnbox" id="d-warn" hidden></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CELLS ================= -->
+<section class="sec alt" id="cells">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">A</span><span>Anodyne cells</span></div>
+      <h2>Cells worth keeping.</h2>
+      <p class="lede">Built to the letter of UBS and rated by an outside lab using the published UBS test method. The code on the wrap is the code you get. Every cell below is drawn at the same scale.</p>
+    </div>
+    <div class="cells" id="cell-grid"></div>
+    <div class="bundle">
+      <div><div class="tag">Starter pool</div><b>4 × BB·74 + CH-1 Pip</b></div>
+      <p style="font-size:15px;color:var(--ink-2)">Enough for a light, a controller and a spare. Add cells as you add devices.</p>
+      <span class="price num">€ 69</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="sec" id="products">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">B</span><span>Anodyne hardware</span></div>
+      <h2>Things that hold cells.</h2>
+      <p class="lede">Grey on purpose. Our devices are neutral and the color comes from the cells you put in. Every housing has a window, so you can always see what's inside and what state it's in.</p>
+    </div>
+
+    <article class="prod">
+      <div class="drawing" id="p-fl1"></div>
+      <div class="info">
+        <div class="pcode"><b>FL-1</b><span>Wick</span></div>
+        <p>A flashlight built around a window. The body tube is clear polycarbonate, so the cell is the color of the light. The universal cradle takes a BB or a B. Charge the cell in place over USB-C, or pull it and use it somewhere else.</p>
+        <dl class="kv">
+          <dt>Takes</dt><dd>1 × BB or B</dd>
+          <dt>Needs</dt><dd>P3 for full turbo · any cell for the rest</dd>
+          <dt>Output</dt><dd class="num">1400 lm turbo · 420 lm high · 12 lm low</dd>
+          <dt>Runtime</dt><dd class="num">9 h on high with a B·94</dd>
+          <dt>Body</dt><dd>Anodised aluminium head · PC window · IP68</dd>
+        </dl>
+        <div class="foot"><span class="price num">€ 89</span><span class="empty-badge">Ships empty</span></div>
+      </div>
+    </article>
+
+    <article class="prod">
+      <div class="drawing" id="p-pb"></div>
+      <div class="info">
+        <div class="pcode"><b>PB</b><span>Stack</span></div>
+        <p>A power bank you can see into and grow. The core holds the ports, screen and a 140 W USB-C PD controller. Modules clip on below, two slots each. Every slot has its own converter, so you can mix sizes and chemistries in one stack.</p>
+        <div class="variants"><span>PB-2 · 1 module</span><span>PB-4 · 2 modules</span><span>PB-8 · 4 modules</span></div>
+        <dl class="kv">
+          <dt>Output</dt><dd class="num">2 × USB-C PD 3.1 · 140 W shared</dd>
+          <dt>Screen</dt><dd>Per-slot charge, health and Wh total</dd>
+          <dt>Flying</dt><dd>Shows its total Wh. Over 100 Wh it says so.</dd>
+          <dt>Housing</dt><dd>Clear PC with a glass-fibre frame</dd>
+        </dl>
+        <div class="foot"><span class="price num">€ 79 / 119 / 179</span><span class="empty-badge">Ships empty</span></div>
+      </div>
+    </article>
+
+    <article class="prod">
+      <div class="drawing" id="p-dr1"></div>
+      <div class="info">
+        <div class="pcode"><b>DR-1</b><span>Brace</span></div>
+        <p>A compact drill driver whose grip is a two-slot UBS bay. Power cells give full torque. Energy cells work too; the drill says so on its LED bar and trades peak torque for longer runtime.</p>
+        <dl class="kv">
+          <dt>Takes</dt><dd>2 × BB or B, any mix</dd>
+          <dt>Needs</dt><dd>P5 per cell for full torque</dd>
+          <dt>Torque</dt><dd class="num">28 Nm max · 12-step clutch</dd>
+          <dt>Speed</dt><dd class="num">0–450 / 0–1500 rpm</dd>
+          <dt>Charging</dt><dd>USB-C PD 100 W in the foot, cells stay in</dd>
+        </dl>
+        <div class="foot"><span class="price num">€ 169</span><span class="empty-badge">Ships empty</span></div>
+      </div>
+    </article>
+
+    <article class="prod">
+      <div class="drawing" id="p-rx1"></div>
+      <div class="info">
+        <div class="pcode"><b>RX-1</b><span>Relay</span></div>
+        <p>A DAB+ and FM radio for the cabin, the boat and the power cut. Three-slot bay underneath: fill it with whatever cells you have. A solar strip and hand crank keep it going when you have nothing else, and a USB-C port can top up a phone.</p>
+        <dl class="kv">
+          <dt>Takes</dt><dd>1–3 × BBB, BB or B, any mix</dd>
+          <dt>Needs</dt><dd>P1 · anything works</dd>
+          <dt>Bands</dt><dd>DAB+ · FM · emergency alerts</dd>
+          <dt>Runtime</dt><dd class="num">≈ 40 h with 3 × B·94</dd>
+          <dt>Backup</dt><dd class="num">2 W solar · crank · USB-C in and out</dd>
+        </dl>
+        <div class="foot"><span class="price num">€ 139</span><span class="empty-badge">Ships empty</span></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= CHARGERS ================= -->
+<section class="sec alt" id="chargers">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">C</span><span>Anodyne chargers</span></div>
+      <h2>The last charger you need.</h2>
+      <p class="lede">Every Anodyne charger takes every UBS size and chemistry. It reads the passport, charges with the right profile, and writes back what it learned. Your cells get a history that lives in the cells themselves, not in the charger.</p>
+    </div>
+    <div class="ch-row">
+      <article class="ch">
+        <div class="drawing" id="p-ch1"></div>
+        <div class="info">
+          <div class="pcode"><b>CH-1</b><span>Pip</span></div>
+          <p>A one-slot stick for the bag. Plug in any USB-C cable. It shows charge and health on a small screen, and reverses to become a pocket power bank.</p>
+          <dl class="kv">
+            <dt>Slots</dt><dd>1 · BBB, BB, B</dd>
+            <dt>Charge</dt><dd class="num">Up to 3 A · USB-C in, 15 W out</dd>
+          </dl>
+          <div class="foot"><span class="price num">€ 29</span><span class="tag">Fits on a keyring</span></div>
+        </div>
+      </article>
+      <article class="ch">
+        <div class="drawing" id="p-ch4"></div>
+        <div class="info">
+          <div class="pcode"><b>CH-4</b><span>Quad</span></div>
+          <p>Four independent bays on the desk with an e-ink status line that stays readable with the power off. Runs a full capacity test on request, so the health number is measured, not estimated.</p>
+          <dl class="kv">
+            <dt>Slots</dt><dd>4 · any size, any mix</dd>
+            <dt>Modes</dt><dd>Charge · storage · capacity test</dd>
+          </dl>
+          <div class="foot"><span class="price num">€ 99</span><span class="tag">USB-C PD 65 W in</span></div>
+        </div>
+      </article>
+    </div>
+
+    <article class="barrel" id="barrel">
+      <div class="drawing">
+        <div id="p-ch12" style="width:100%;display:flex;justify-content:center"></div>
+        <div class="dial-ctl">
+          <button class="btn" type="button" id="bx-prev" aria-label="Rotate to previous chamber">◀ Prev</button>
+          <button class="btn solid" type="button" id="bx-next" aria-label="Rotate to next chamber">Next ▶</button>
+        </div>
+        <span class="tag">Click a chamber or use the arrow keys</span>
+      </div>
+      <div class="info">
+        <div class="pcode"><b>CH-12</b><span>Barrel</span></div>
+        <p>Twelve chambers in a rotating aluminium barrel. Slide cells in from the front, turn the dial, and the chamber under the read head shows its whole life. It manages the pool by itself: fills what you'll need, parks the rest at storage charge, and tells you when a cell should retire.</p>
+        <div class="screen" id="bx-screen" aria-live="polite"></div>
+        <div>
+          <div class="tag" style="margin-bottom:8px">Pool · 10 of 12 chambers filled</div>
+          <div class="pool" id="bx-pool"></div>
+        </div>
+        <div class="foot" style="display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid var(--ink);padding-top:14px;gap:12px;flex-wrap:wrap"><span class="price num">€ 349</span><span class="tag">12 × 3 A · 240 W · machined dial</span></div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= BAY ================= -->
+<section class="sec" id="bay">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">UBS</span><span>§6 · Bays · optional part of the spec</span></div>
+      <h2>Use whatever cells you have.</h2>
+      <p class="lede">A UBS bay is a set of universal slots, each with its own small converter. The converters feed one shared power line, so the device never sees the cells directly. That means a bay can take two B cells today and three BB cells tomorrow, mixed sizes, mixed chemistries, mixed health. Try it.</p>
+    </div>
+    <div class="bay">
+      <div class="drawing" id="bay-svg"></div>
+      <div class="ctl">
+        <div class="field">
+          <label class="tag" for="bay-load">Device load</label>
+          <select id="bay-load">
+            <option value="radio">RX-1 Relay · radio · 1.2 W average, 6 W peak</option>
+            <option value="light" selected>FL-1 Wick on high · 5 W average, 25 W peak</option>
+            <option value="drill">DR-1 Brace · 40 W average, 180 W peak</option>
+          </select>
+        </div>
+        <div class="slots">
+          <span class="tag">Slots</span>
+          <label><span class="tag">01</span><select id="bay-s0"></select></label>
+          <label><span class="tag">02</span><select id="bay-s1"></select></label>
+          <label><span class="tag">03</span><select id="bay-s2"></select></label>
+        </div>
+        <div class="readout">
+          <div><span class="tag">Usable energy</span><b id="bay-wh">–</b></div>
+          <div><span class="tag">Runtime</span><b id="bay-rt">–</b></div>
+          <div><span class="tag">Peak power</span><b id="bay-pw">–</b></div>
+          <div><span class="tag">Cell weight</span><b id="bay-g">–</b></div>
+        </div>
+        <div class="status" id="bay-status" aria-live="polite">–</div>
+      </div>
+    </div>
+    <div class="why">
+      <div><span class="tag">Cost</span><h3>About 8% of the energy</h3><p>Per-slot converters lose some power as heat. In return you never need matched cells, and a tired cell can't drag down a fresh one.</p></div>
+      <div><span class="tag">Share</span><h3>Each cell pulls its weight</h3><p>The bay draws from each slot in proportion to its remaining energy, so all cells run out together and none is pushed past its rating.</p></div>
+      <div><span class="tag">Choice</span><h3>Weight or runtime, your call</h3><p>One B cell for a light hike. Three for a week at the cabin. The device is the same.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SPEC ================= -->
+<section class="sec alt" id="spec">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">UBS</span><span>§7 · At a glance · Draft 0.3</span></div>
+      <h2>The whole spec on one table.</h2>
+      <p class="lede">UBS is written to stay small enough to fit here. The full draft adds the test methods, the passport data format and the bay connector drawings.</p>
+    </div>
+    <div class="scroll-x">
+    <table class="glance">
+      <thead><tr><th scope="col">Part</th><th scope="col">Section</th><th scope="col">Requirement</th><th scope="col">Why</th></tr></thead>
+      <tbody>
+        <tr><td>Sizes</td><td>§1</td><td>BBB Ø14.5 × 53.0 · BB Ø18.6 × 69.0 · B Ø21.7 × 75.0 mm, button top</td><td>One cell fits every holder of its size</td></tr>
+        <tr><td>Chemistry</td><td>§2</td><td>Green + 1 band Li-ion · orange + 2 bands LiFePO₄ · blue + 3 bands sodium-ion (reserved)</td><td>Readable at a glance, by touch, and without color vision</td></tr>
+        <tr><td>Devices</td><td>§2</td><td>Accept 2.0–4.2 V per cell and every approved chemistry in their size</td><td>Any cell of the right size just works</td></tr>
+        <tr><td>Protection</td><td>§3</td><td>Overcharge, over-discharge, over-current, short circuit and temperature, in the cell</td><td>Safe for people who never read a datasheet</td></tr>
+        <tr><td>Passport</td><td>§4</td><td>Ring contact · one-wire bus · identity, rating, cycles, health, last host</td><td>Health travels with the cell, not the device</td></tr>
+        <tr><td>Rating</td><td>§5</td><td>Two-digit energy·power code from a public test method</td><td>One honest number on the wrap</td></tr>
+        <tr><td>Bays</td><td>§6</td><td>Universal slots, per-slot converters, shared bus (optional)</td><td>Use whatever cells you have</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="sub" style="margin-top:clamp(40px,6vw,72px);padding-top:clamp(40px,6vw,72px)">
+      <div class="sub-head">
+        <div class="tag">Open questions · for draft 0.4</div>
+        <div class="body">
+          <h3>What we haven't solved yet.</h3>
+          <p>An open standard should say where it's unfinished. These are the questions on the table. Comments are open to anyone.</p>
+        </div>
+      </div>
+      <div class="oq">
+        <div><span class="tag">§1</span><h3>Keeping BBB out of AA devices</h3><p>A longer body stops most compartments from closing, but not spring-loaded ones. A keyed shoulder on the positive end is the leading proposal.</p></div>
+        <div><span class="tag">§4</span><h3>Passport contact wear</h3><p>The ring contact needs to survive thousands of insertions in dusty pockets. Gold plating works, but costs money on every cell.</p></div>
+        <div><span class="tag">§5</span><h3>Who tests the ratings</h3><p>A public method is a start. Without independent spot checks, "BB·74" can become the new "9900 mAh".</p></div>
+        <div><span class="tag">§2</span><h3>Charging inside devices</h3><p>In-device charging is allowed today if the device reads the passport. Should a device that can't read it be allowed to charge at all?</p></div>
+        <div><span class="tag">§6</span><h3>Bay efficiency</h3><p>Per-slot converters cost around 8%. A bypass mode when all cells match could win most of that back.</p></div>
+        <div><span class="tag">§2</span><h3>Sodium-ion approval</h3><p>Sodium-ion cells can sit at 0 V safely, which breaks the over-discharge rule. The spec needs a chemistry-aware version.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="big">SHIPS<br>EMPTY.</div>
+    <div class="cols">
+      <div><div class="tag">Anodyne</div><p>Cells, light, power, tools, radio and chargers for the Universal Battery System. Every product is sold without cells.</p></div>
+      <div><div class="tag">UBS</div><p>The Universal Battery System is an open specification. Draft 0.3, published under CC BY 4.0. Anodyne is a contributor, not the owner.</p></div>
+      <div><div class="tag">This site</div><p>A concept. Products, prices and ratings are design studies for the UBS proposal.</p></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= DATA ================= */
+var CHEM = {
+  li:  {name:"Li-ion",     color:"Green",  bands:1, v:3.6, range:"2.5–4.2 V", cls:"li"},
+  lfp: {name:"LiFePO₄",    color:"Orange", bands:2, v:3.2, range:"2.0–3.65 V", cls:"lfp"},
+  na:  {name:"Sodium-ion", color:"Blue",   bands:3, v:3.1, range:"1.5–4.0 V", cls:"na"}
+};
+var FMT = {
+  BBB:{d:14.5, L:53.0, base:"14500"},
+  BB: {d:18.6, L:69.0, base:"18650"},
+  B:  {d:21.7, L:75.0, base:"21700"}
+};
+var E_T = [2,3,4.5,6,8,10,12,15,18];         // Wh thresholds for classes 1..9
+var P_T = [5,10,20,35,50,75,100,125,150];    // W thresholds for classes 1..9
+function cls(v,T){var c=0;for(var i=0;i<T.length;i++){if(v>=T[i])c=i+1;}return c;}
+function rate(fmt,chem,mAh,A){
+  var v=CHEM[chem].v, wh=mAh/1000*v, w=A*v, e=cls(wh,E_T), p=cls(w,P_T);
+  return {wh:wh,w:w,e:e,p:p,code:fmt+"·"+e+p};
+}
+var CELLS = [
+  {id:"BBB22",fmt:"BBB",chem:"li", mAh:1000,A:3,  g:21,cyc:"500",  price:9,  note:"Small lights, remotes, controllers"},
+  {id:"BBB11",fmt:"BBB",chem:"lfp",mAh:700, A:2,  g:19,cyc:"2000", price:9,  note:"Always-on sensors, clocks"},
+  {id:"BB74", fmt:"BB", chem:"li", mAh:3500,A:10, g:47,cyc:"500",  price:12, note:"The everyday cell"},
+  {id:"BB66", fmt:"BB", chem:"li", mAh:3000,A:25, g:47,cyc:"400",  price:14, note:"Tools and turbo modes"},
+  {id:"BB32", fmt:"BB", chem:"lfp",mAh:1800,A:5,  g:41,cyc:"2500", price:11, note:"Radios, solar, storage"},
+  {id:"B94",  fmt:"B",  chem:"li", mAh:5000,A:10, g:69,cyc:"500",  price:15, note:"Longest runtime per cell"},
+  {id:"B88",  fmt:"B",  chem:"li", mAh:4500,A:35, g:69,cyc:"500",  price:17, note:"High power and high energy"},
+  {id:"B53",  fmt:"B",  chem:"lfp",mAh:2800,A:10, g:64,cyc:"3000", price:14, note:"Lasts a decade of cycles"}
+];
+CELLS.forEach(function(c){var r=rate(c.fmt,c.chem,c.mAh,c.A);c.wh=r.wh;c.w=r.w;c.e=r.e;c.p=r.p;c.code=r.code;});
+var BY = {}; CELLS.forEach(function(c){BY[c.id]=c;});
+
+/* ================= DRAWING HELPERS ================= */
+function f1(n){return Math.round(n*10)/10;}
+function svg(vb,inner,label){return '<svg viewBox="'+vb+'" role="img" aria-label="'+label+'">'+inner+'</svg>';}
+function bars(x,y,w,h,seed){
+  var s=seed, out="", cx=x;
+  function rnd(){s=(s*9301+49297)%233280;return s/233280;}
+  while(cx<x+w){var bw=rnd()<.5?1:(rnd()<.6?2:3.2); if(cx+bw>x+w)break; out+='<rect class="c-bar" x="'+f1(cx)+'" y="'+y+'" width="'+bw+'" height="'+h+'"/>'; cx+=bw+(rnd()<.5?1.2:2.4);}
+  return out;
+}
+/* A UBS cell. Horizontal: positive to the right, box [x,x+L]×[y,y+D]. rot:-90 → vertical, positive up, box [x,x+D]×[y,y+L]. */
+function cell(o){
+  var f=FMT[o.fmt], s=o.s, L=f.L*s, D=f.d*s, ch=CHEM[o.chem];
+  var nubW=Math.max(1.4,1.1*s), nubH=D*.4, bodyL=L-nubW, r=Math.min(D*.14,2+s*.8), capW=bodyL*.12;
+  var g='';
+  g+='<rect class="c-steel" x="'+f1(bodyL-1)+'" y="'+f1((D-nubH)/2)+'" width="'+f1(nubW+1)+'" height="'+f1(nubH)+'" rx="'+f1(Math.min(nubW*.4,3))+'"/>';
+  g+='<rect class="c-'+ch.cls+' c-body" x="0" y="0" width="'+f1(bodyL)+'" height="'+f1(D)+'" rx="'+f1(r)+'"/>';
+  g+='<path class="c-cap" d="M'+f1(bodyL-capW)+' 0H'+f1(bodyL-r)+'A'+f1(r)+' '+f1(r)+' 0 0 1 '+f1(bodyL)+' '+f1(r)+'V'+f1(D-r)+'A'+f1(r)+' '+f1(r)+' 0 0 1 '+f1(bodyL-r)+' '+f1(D)+'H'+f1(bodyL-capW)+'Z"/>';
+  g+='<line class="c-ring" x1="'+f1(bodyL-capW*.3)+'" y1="'+f1(D*.14)+'" x2="'+f1(bodyL-capW*.3)+'" y2="'+f1(D*.86)+'"/>';
+  for(var i=0;i<ch.bands;i++){g+='<rect class="c-band" x="'+f1(bodyL*.055+i*bodyL*.04)+'" y="0" width="'+f1(bodyL*.022)+'" height="'+f1(D)+'"/>';}
+  if(o.code!==false){
+    var fs=D*(o.fs||.4), tx=bodyL*(o.tx||.24);
+    g+='<text class="c-code" x="'+f1(tx)+'" y="'+f1(D/2+fs*.36)+'" font-size="'+f1(fs)+'">'+(o.code||o.fmt)+'</text>';
+  }
+  if(o.fine){
+    g+='<text class="c-fine" x="'+f1(bodyL*(o.tx||.24))+'" y="'+f1(D*.22)+'" font-size="'+f1(D*.075)+'">UBS · '+ch.name.toUpperCase()+' · '+ch.v.toFixed(1)+' V'+(o.fineX||'')+'</text>';
+    g+=bars(bodyL*.64,D*.62,bodyL*.18,D*.22,o.seed||7);
+    g+='<text class="c-capt" x="'+f1(bodyL-capW+capW*.12)+'" y="'+f1(D*.56)+'" font-size="'+f1(D*.07)+'" transform="rotate(-90 '+f1(bodyL-capW+capW*.35)+' '+f1(D*.5)+')">UBS+</text>';
+  }
+  g+='<rect x="0" y="0" width="'+f1(bodyL)+'" height="'+f1(D)+'" rx="'+f1(r)+'" fill="url(#cylH)" pointer-events="none"/>';
+  var t = o.rot===-90 ? 'translate('+f1(o.x)+' '+f1(o.y+L)+') rotate(-90)' : 'translate('+f1(o.x)+' '+f1(o.y)+')';
+  return '<g class="cell" transform="'+t+'">'+g+'</g>';
+}
+function cellDims(fmt,s){var f=FMT[fmt];return {L:f.L*s,D:f.d*s};}
+
+/* ================= HERO ================= */
+(function(){
+  var s=7.4, x=44, y=86, d=cellDims("BB",s), bodyL=d.L-Math.max(1.4,1.1*s), capW=bodyL*.12;
+  var c=BY.BB74, g='';
+  g+=cell({x:x,y:y,fmt:"BB",chem:"li",s:s,code:c.code,fine:true,fineX:' · '+c.wh.toFixed(1)+' Wh · '+Math.round(c.w)+' W',tx:.2,fs:.42,seed:11});
+  // scan sweep
+  g+='<g style="mix-blend-mode:overlay"><rect class="scan" x="0" y="'+(y-2)+'" width="70" height="'+f1(d.D+4)+'" fill="url(#scanG)"/></g>';
+  // callouts
+  var ringX=x+bodyL-capW*.3, bandX=x+bodyL*.055+bodyL*.011, capX=x+bodyL-capW*.6, codeX=x+bodyL*.26;
+  function co(x1,y1,x2,y2,tx,ty,anchor,t1,t2){
+    return '<path class="ln lead-line" d="M'+f1(x1)+' '+f1(y1)+'L'+f1(x1)+' '+f1(y2)+'L'+f1(x2)+' '+f1(y2)+'" style="stroke-width:1"/>'+
+      '<circle cx="'+f1(x1)+'" cy="'+f1(y1)+'" r="2.6" class="ink"/>'+
+      '<text class="lbl k" x="'+tx+'" y="'+ty+'" text-anchor="'+anchor+'">'+t1+'</text>'+
+      '<text class="lbl" x="'+tx+'" y="'+(ty+13)+'" text-anchor="'+anchor+'">'+t2+'</text>';
+  }
+  g+=co(bandX,y+8,bandX+22,40,bandX+26,36,"start","§2 · ONE BAND = LI-ION","GREEN WRAP · READABLE BY TOUCH");
+  g+=co(ringX,y+14,ringX-22,40,ringX-26,36,"end","§4 · PASSPORT RING","DATA CONTACT · HEALTH + HISTORY");
+  g+=co(capX,y+d.D-10,616,y+d.D+36,612,y+d.D+32,"end","§3 · PROTECTION CIRCUIT","MANDATORY · INSIDE THE CAP");
+  g+=co(codeX,y+d.D-24,codeX+22,y+d.D+36,codeX+26,y+d.D+32,"start","§5 · RATING CODE","E7 ≥ 12 WH · P4 ≥ 35 W");
+  // dims
+  var dy=y+d.D+76;
+  g+='<path class="dim" d="M'+x+' '+(dy-6)+'V'+(dy+6)+'M'+f1(x+d.L)+' '+(dy-6)+'V'+(dy+6)+'M'+x+' '+dy+'H'+f1(x+d.L)+'"/>';
+  g+='<rect class="bgf" x="'+f1(x+d.L/2-46)+'" y="'+(dy-8)+'" width="92" height="16"/>';
+  g+='<text class="lbl k" x="'+f1(x+d.L/2)+'" y="'+(dy+3.5)+'" text-anchor="middle">69.0 MM</text>';
+  g+='<path class="dim" d="M'+(x-18)+' '+y+'H'+(x-10)+'M'+(x-18)+' '+f1(y+d.D)+'H'+(x-10)+'M'+(x-14)+' '+y+'V'+f1(y+d.D)+'"/>';
+  g+='<text class="lbl k" x="'+(x-22)+'" y="'+f1(y+d.D/2)+'" text-anchor="middle" transform="rotate(-90 '+(x-22)+' '+f1(y+d.D/2)+')">Ø 18.6</text>';
+  g+='<text class="lbl" x="'+f1(x+d.L)+'" y="'+(dy+26)+'" text-anchor="end">FIG. 01 · UBS BB CELL · ANODYNE BB·74</text>';
+  document.getElementById("hero-svg").innerHTML=svg("0 0 620 "+(dy+34),g,"A UBS BB cell with callouts: one chemistry band, passport ring, protection circuit and the rating code BB·74");
+})();
+
+/* ================= §1 FORMATS ================= */
+(function(){
+  var s=3, base=262, g='', items=[["AA",14.5,50.5],["BBB"],["BB"],["B"]], x=26;
+  items.forEach(function(it){
+    var name=it[0], D, L;
+    if(name==="AA"){D=it[1]*s;L=it[2]*s;
+      g+='<rect class="c-empty" x="'+x+'" y="'+f1(base-L)+'" width="'+f1(D)+'" height="'+f1(L)+'" rx="4"/>';
+      g+='<rect class="c-empty" x="'+f1(x+D*.3)+'" y="'+f1(base-L-4)+'" width="'+f1(D*.4)+'" height="4"/>';
+      g+='<text class="lbl" x="'+f1(x+D/2)+'" y="'+f1(base-L-14)+'" text-anchor="middle">Ø14.5×50.5</text>';
+      g+='<text class="lbl-lg" x="'+f1(x+D/2)+'" y="'+(base+24)+'" text-anchor="middle" font-size="17" style="fill:var(--ink-3)">AA</text>';
+      g+='<text class="lbl" x="'+f1(x+D/2)+'" y="'+(base+38)+'" text-anchor="middle">1.5 V · REF.</text>';
+    } else {
+      var f=FMT[name]; D=f.d*s; L=f.L*s;
+      g+=cell({x:x,y:base-L,fmt:name,chem:"li",s:s,rot:-90,code:name,fs:.42,tx:.22});
+      g+='<text class="lbl" x="'+f1(x+D/2)+'" y="'+f1(base-L-10)+'" text-anchor="middle">Ø'+f.d+'×'+f.L.toFixed(1)+'</text>';
+      g+='<text class="lbl-lg" x="'+f1(x+D/2)+'" y="'+(base+24)+'" text-anchor="middle" font-size="17">'+name+'</text>';
+      g+='<text class="lbl" x="'+f1(x+D/2)+'" y="'+(base+38)+'" text-anchor="middle">'+f.base+'</text>';
+    }
+    x+=D+(name==="AA"?44:40);
+  });
+  g+='<line class="dash" x1="10" x2="'+(x-10)+'" y1="'+base+'" y2="'+base+'"/>';
+  document.getElementById("fmt-svg").innerHTML=svg("0 0 "+(x)+" 306",g,"UBS sizes BBB, BB and B drawn to scale next to an AA battery");
+})();
+
+/* ================= §2 CHEMISTRY ================= */
+(function(){
+  var info = {
+    li:{life:"≈ 500 cycles to 80%",best:"Most energy per gram. The default for most devices."},
+    lfp:{life:"2000+ cycles to 80%",best:"Very stable and long-lived. Less energy, more years."},
+    na:{life:"Under evaluation",best:"No lithium, strong in the cold, can be stored and shipped at 0 V."}
+  };
+  var html='';
+  ["li","lfp","na"].forEach(function(k){
+    var ch=CHEM[k], d=cellDims("BB",2.2);
+    var pic=svg("0 0 "+f1(d.D+2)+" "+f1(d.L+2), cell({x:1,y:1,fmt:"BB",chem:k,s:2.2,rot:-90,code:false}), ch.name+" UBS cell with "+ch.bands+" band"+(ch.bands>1?"s":""));
+    html+='<div class="chem'+(k==="na"?" reserved":"")+'">'+pic+'<div>'+
+      '<div class="sw"><i style="background:var(--'+k+')"></i><span class="tag">'+ch.color+' · '+ch.bands+' band'+(ch.bands>1?'s':'')+'</span>'+(k==="na"?'<span class="res">RESERVED</span>':'')+'</div>'+
+      '<h3 class="'+k+'-t">'+ch.name+'</h3>'+
+      '<dl><dt>Nominal</dt><dd class="num">'+ch.v.toFixed(1)+' V</dd><dt>Window</dt><dd class="num">'+ch.range+'</dd><dt>Life</dt><dd>'+info[k].life+'</dd></dl>'+
+      '<p style="font-size:14px;color:var(--ink-2);margin-top:10px">'+info[k].best+'</p></div></div>';
+  });
+  document.getElementById("chem-grid").innerHTML=html;
+})();
+
+/* ================= §3/§4 EXPLODED CAP ================= */
+(function(){
+  var cx=118, rx=78, ry=19, g='', y0=46, step=48;
+  var layers=[
+    ["steel","+ BUTTON","NICKEL-PLATED STEEL",.32],
+    ["ring","PASSPORT RING","GOLD-PLATED DATA CONTACT",.62],
+    ["disc","PTC FUSE","TRIPS ON SUSTAINED OVER-CURRENT",.9],
+    ["pcb","PROTECTION BOARD","IC + DUAL MOSFET · §3",1],
+    ["pcb2","PASSPORT CHIP","2 KB EEPROM · §4",.5],
+    ["can","CELL CAN + NTC","TEMPERATURE SENSED AT THE TOP",1]
+  ];
+  g+='<line class="dash" x1="'+cx+'" x2="'+cx+'" y1="20" y2="'+(y0+step*5+60)+'"/>';
+  layers.forEach(function(L,i){
+    var y=y0+i*step, r=rx*L[3], rr=ry*L[3];
+    if(L[0]==="can"){
+      g+='<path class="c-li c-body" d="M'+(cx-rx)+' '+y+'V'+(y+56)+'A'+rx+' '+ry+' 0 0 0 '+(cx+rx)+' '+(y+56)+'V'+y+'Z"/>';
+      g+='<ellipse class="c-cap" cx="'+cx+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" style="stroke:var(--ink);stroke-width:1"/>';
+      g+='<rect x="'+(cx+26)+'" y="'+(y-5)+'" width="12" height="7" rx="2" style="fill:#3a3f3c;stroke:#6c7570;stroke-width:.6"/>';
+    } else if(L[0]==="ring"){
+      g+='<ellipse cx="'+cx+'" cy="'+y+'" rx="'+f1(r)+'" ry="'+f1(rr)+'" style="fill:none;stroke:#C9A640;stroke-width:6"/>';
+      g+='<ellipse cx="'+cx+'" cy="'+y+'" rx="'+f1(r)+'" ry="'+f1(rr)+'" class="thin"/>';
+    } else if(L[0]==="pcb"){
+      g+='<ellipse class="pcb" cx="'+cx+'" cy="'+y+'" rx="'+f1(r)+'" ry="'+f1(rr)+'"/>';
+      g+='<rect class="chip" x="'+(cx-30)+'" y="'+(y-6)+'" width="18" height="10"/><rect class="chip" x="'+(cx-6)+'" y="'+(y-8)+'" width="26" height="12"/><rect class="chip" x="'+(cx+26)+'" y="'+(y-4)+'" width="10" height="7"/>';
+    } else if(L[0]==="pcb2"){
+      g+='<ellipse class="pcb" cx="'+cx+'" cy="'+y+'" rx="'+f1(r)+'" ry="'+f1(rr)+'"/><rect class="chip" x="'+(cx-9)+'" y="'+(y-5)+'" width="18" height="9"/>';
+    } else if(L[0]==="steel"){
+      g+='<path class="steel" d="M'+f1(cx-r)+' '+y+'v-7a'+f1(r)+' '+f1(rr)+' 0 0 1 '+f1(2*r)+' 0v7a'+f1(r)+' '+f1(rr)+' 0 0 1 '+f1(-2*r)+' 0z"/>';
+      g+='<ellipse class="steel" cx="'+cx+'" cy="'+(y-7)+'" rx="'+f1(r)+'" ry="'+f1(rr)+'"/>';
+    } else {
+      g+='<ellipse class="dv2" cx="'+cx+'" cy="'+y+'" rx="'+f1(r)+'" ry="'+f1(rr)+'"/><ellipse class="bgf" cx="'+cx+'" cy="'+y+'" rx="'+f1(r*.45)+'" ry="'+f1(rr*.45)+'" style="stroke:var(--ink);stroke-width:1"/>';
+    }
+    g+='<path class="dim" d="M'+f1(cx+r+6)+' '+y+'H236"/><circle cx="236" cy="'+y+'" r="2" class="ink"/>';
+    g+='<text class="lbl k" x="244" y="'+(y-1)+'">'+L[1]+'</text><text class="lbl" x="244" y="'+(y+12)+'">'+L[2]+'</text>';
+  });
+  document.getElementById("cap-svg").innerHTML=svg("0 0 420 350",g,"Exploded view of a UBS positive cap: button, passport ring, PTC fuse, protection board, passport chip and cell can");
+})();
+
+/* ================= §5 DECODER ================= */
+(function(){
+  var MAXC={BBB:{li:1200,lfp:800,na:700},BB:{li:3600,lfp:2000,na:1600},B:{li:5500,lfp:4000,na:3200}};
+  var MAXA={BBB:8,BB:35,B:50};
+  var eEl=document.getElementById("d-e"), pEl=document.getElementById("d-p");
+  function ladder(el,T,unit,title,on){
+    var h='<span class="h">'+title+'</span>';
+    for(var i=0;i<10;i++){
+      var lo=i===0?"<"+T[0]:"≥"+T[i-1];
+      h+='<div class="s'+(i===on?' on':'')+'"><b>'+i+'</b><small>'+lo+unit+'</small></div>';
+    }
+    el.innerHTML=h;
+  }
+  function val(name){var r=document.querySelector('input[name="'+name+'"]:checked');return r?r.value:null;}
+  function upd(){
+    var fmt=val("d-fmt")||"BB", chem=val("d-chem")||"li";
+    var mAh=+document.getElementById("d-mah").value, A=+document.getElementById("d-amp").value;
+    var r=rate(fmt,chem,mAh,A);
+    document.getElementById("d-mah-v").textContent=mAh+" mAh";
+    document.getElementById("d-amp-v").textContent=A+" A";
+    document.getElementById("d-code").textContent=r.code;
+    document.getElementById("d-sum").textContent=r.wh.toFixed(1)+" Wh · "+Math.round(r.w)+" W · "+CHEM[chem].name;
+    var s=4.1, d=cellDims(fmt,s);
+    var g=cell({x:4,y:(96-d.D)/2+2,fmt:fmt,chem:chem,s:s,code:r.code,fs:.4,tx:.2});
+    document.getElementById("d-cell").innerHTML=svg("0 0 "+f1(FMT.B.L*s+8)+" 100",g,"Cell preview "+r.code);
+    ladder(eEl,E_T," Wh","Energy",r.e);
+    ladder(pEl,P_T," W","Power",r.p);
+    var msgs=[];
+    if(mAh>MAXC[fmt][chem]) msgs.push("No "+fmt+" "+CHEM[chem].name+" cell we know of holds "+mAh+" mAh. The best today hold about "+MAXC[fmt][chem]+". This is how fake ratings look.");
+    if(A>MAXA[fmt]) msgs.push("No "+fmt+" cell can deliver "+A+" A continuously without overheating. Expect around "+MAXA[fmt]+" A at most.");
+    if(chem==="na") msgs.push("Sodium-ion is reserved in draft 0.3. Codes are shown for illustration.");
+    var w=document.getElementById("d-warn"); w.hidden=!msgs.length; w.textContent=msgs.join(" ");
+  }
+  document.querySelectorAll('#decoder input').forEach(function(i){i.addEventListener("input",upd);i.addEventListener("change",upd);});
+  upd();
+})();
+
+/* ================= CELL LINEUP ================= */
+(function(){
+  var s=2.55, H=FMT.B.L*s+4, html='';
+  CELLS.forEach(function(c){
+    var d=cellDims(c.fmt,s);
+    var pic=svg("0 0 "+f1(d.D+4)+" "+f1(H), cell({x:2,y:H-d.L-2,fmt:c.fmt,chem:c.chem,s:s,rot:-90,code:c.code,fs:.36,tx:.2}), "Anodyne "+c.code+" "+CHEM[c.chem].name+" cell");
+    html+='<article class="cellcard"><div class="fig">'+pic+'</div>'+
+      '<div><div class="code">'+c.code+'</div><div class="tag '+c.chem+'-t" style="margin-top:6px;color:inherit"><span class="'+c.chem+'-t">'+CHEM[c.chem].name+'</span> · '+c.note+'</div></div>'+
+      '<dl><dt>Capacity</dt><dd>'+c.mAh+' mAh</dd><dt>Energy</dt><dd>'+c.wh.toFixed(1)+' Wh</dd><dt>Current</dt><dd>'+c.A+' A</dd><dt>Power</dt><dd>'+Math.round(c.w)+' W</dd><dt>Cycles</dt><dd>'+c.cyc+'</dd><dt>Weight</dt><dd>'+c.g+' g</dd></dl>'+
+      '<div class="foot"><span class="price num">€ '+c.price+'</span><span class="tag">'+FMT[c.fmt].base+' base</span></div></article>';
+  });
+  document.getElementById("cell-grid").innerHTML=html;
+})();
+
+/* ================= PRODUCTS ================= */
+function callout(x1,y1,x2,y2,t1,t2,anchor){
+  anchor=anchor||"start";
+  var tx=anchor==="start"?x2+4:x2-4;
+  return '<path class="dim" d="M'+x1+' '+y1+'L'+x2+' '+y2+'"/><circle cx="'+x1+'" cy="'+y1+'" r="2.2" class="ink"/>'+
+    '<text class="lbl k" x="'+tx+'" y="'+(y2-2)+'" text-anchor="'+anchor+'">'+t1+'</text>'+(t2?'<text class="lbl" x="'+tx+'" y="'+(y2+10)+'" text-anchor="'+anchor+'">'+t2+'</text>':'');
+}
+
+/* FL-1 */
+(function(){
+  var g='';
+  // beam hint
+  g+='<path d="M22 110 L0 60 M22 110 L0 160" class="dash"/>';
+  // head
+  g+='<rect class="dv2" x="26" y="52" width="24" height="116" rx="6"/>';
+  g+='<ellipse class="gl" cx="27" cy="110" rx="6" ry="50"/>';
+  g+='<path class="dv" d="M50 52H118L152 80V140L118 168H50Z"/>';
+  for(var i=0;i<7;i++){g+='<line class="thin" x1="'+(60+i*9)+'" y1="58" x2="'+(60+i*9)+'" y2="162"/>';}
+  // tube
+  g+='<rect class="dv" x="152" y="80" width="282" height="60"/>';
+  g+='<rect class="bgf" x="170" y="85" width="238" height="50" rx="4" style="opacity:.6"/>';
+  var d=cellDims("BB",2.3);
+  g+=cell({x:174,y:110-d.D/2,fmt:"BB",chem:"li",s:2.3,code:"BB·74",fs:.44,tx:.22});
+  var sx=174+d.L+2;
+  g+='<polyline class="ln" style="stroke-width:1.2" points="'+sx+',110 '+(sx+4)+',96 '+(sx+8)+',124 '+(sx+12)+',96 '+(sx+16)+',124 '+(sx+20)+',96 '+(sx+24)+',124 '+(sx+28)+',96 406,110"/>';
+  g+='<rect class="gl" x="170" y="85" width="238" height="50" rx="4"/>';
+  // tail
+  g+='<rect class="dv2" x="434" y="76" width="54" height="68" rx="8"/>';
+  g+='<rect class="inkS" x="488" y="96" width="9" height="28" rx="3"/>';
+  g+='<rect class="bgf" x="450" y="104" width="22" height="11" rx="5.5" style="stroke:var(--ink);stroke-width:1.2"/>';
+  g+='<line class="thin" x1="444" y1="80" x2="444" y2="140"/><line class="thin" x1="478" y1="80" x2="478" y2="140"/>';
+  // callouts
+  g+=callout(250,86,230,34,"CLEAR PC WINDOW","THE CELL IS THE COLOR");
+  g+=callout(88,60,96,26,"ALU HEAD","TIR OPTIC · IP68");
+  g+=callout(461,110,470,196,"USB-C","CHARGES CELL IN PLACE","end");
+  g+=callout(300,134,230,196,"UNIVERSAL CRADLE","TAKES BB OR B","end");
+  g+=callout(492,96,498,40,"TAIL SWITCH","","end");
+  document.getElementById("p-fl1").innerHTML=svg("0 0 510 214",g,"FL-1 Wick flashlight with a clear window showing a green BB cell inside");
+})();
+
+/* PB STACK */
+(function(){
+  var s=1.4, B=cellDims("B",s), g='', base=420, modH=72, coreH=46, W=128;
+  var packs=[
+    {x:20, name:"PB-2", cells:["B94","B94"]},
+    {x:190,name:"PB-4", cells:["BB74","BB74","BB32","B53"]},
+    {x:360,name:"PB-8", cells:["B94","B94","B94","B94","B94","B94","B94","B94"]}
+  ];
+  packs.forEach(function(p){
+    var mods=p.cells.length/2, h=coreH+mods*modH, top=base-h, x=p.x;
+    // ports on top
+    g+='<rect class="inkS" x="'+(x+18)+'" y="'+(top-4)+'" width="16" height="6" rx="3"/><rect class="inkS" x="'+(x+40)+'" y="'+(top-4)+'" width="16" height="6" rx="3"/>';
+    // housing
+    g+='<rect class="gl" x="'+x+'" y="'+top+'" width="'+W+'" height="'+h+'" rx="9"/>';
+    // core pcb
+    g+='<rect class="pcb" x="'+(x+7)+'" y="'+(top+7)+'" width="'+(W-14)+'" height="'+(coreH-14)+'" rx="3"/>';
+    g+='<rect class="chip" x="'+(x+14)+'" y="'+(top+14)+'" width="16" height="16"/><circle cx="'+(x+44)+'" cy="'+(top+23)+'" r="7" style="fill:#2c3a33;stroke:#7a8a80;stroke-width:.8"/><rect class="chip" x="'+(x+56)+'" y="'+(top+17)+'" width="9" height="12"/>';
+    g+='<rect class="scr" x="'+(x+W-52)+'" y="'+(top+12)+'" width="38" height="20" rx="2"/>';
+    var wh=0; p.cells.forEach(function(id){wh+=BY[id].wh;});
+    g+='<text class="scr-t" x="'+(x+W-33)+'" y="'+(top+25.5)+'" font-size="9" text-anchor="middle">'+Math.round(wh)+'Wh</text>';
+    // modules
+    for(var m=0;m<mods;m++){
+      var my=top+coreH+m*modH;
+      g+='<line class="thin" style="opacity:.9" x1="'+x+'" x2="'+(x+W)+'" y1="'+my+'" y2="'+my+'"/>';
+      g+='<rect class="inkS" x="'+(x-3)+'" y="'+(my-5)+'" width="4" height="10"/><rect class="inkS" x="'+(x+W-1)+'" y="'+(my-5)+'" width="4" height="10"/>';
+      for(var k=0;k<2;k++){
+        var id=p.cells[m*2+k], c=BY[id], cd=cellDims(c.fmt,s);
+        var sy=my+6+k*33, slotH=31;
+        g+='<rect class="c-empty" style="stroke-dasharray:2 3;opacity:.5" x="'+(x+6)+'" y="'+sy+'" width="'+(B.L+2)+'" height="'+slotH+'" rx="3"/>';
+        g+=cell({x:x+7,y:sy+(slotH-cd.D)/2,fmt:c.fmt,chem:c.chem,s:s,code:c.code,fs:.44,tx:.2});
+        g+='<rect class="pcb" x="'+(x+W-17)+'" y="'+(sy+8)+'" width="11" height="15" rx="1"/>';
+      }
+    }
+    g+='<text class="lbl-lg" x="'+x+'" y="'+(base+24)+'" font-size="16">'+p.name+'</text>';
+    var fly = wh>100 ? "AIRLINE APPROVAL" : "CARRY-ON OK";
+    g+='<text class="lbl" x="'+x+'" y="'+(base+38)+'">'+wh.toFixed(1)+' WH · '+fly+'</text>';
+  });
+  g+='<line class="dash" x1="6" x2="500" y1="'+base+'" y2="'+base+'"/>';
+  g+=callout(471,148,440,30,"PER-SLOT CONVERTER","MIX SIZES + CHEMISTRIES","end");
+  g+=callout(148,348,150,150,"CLIP-ON MODULES","2 SLOTS EACH");
+  document.getElementById("p-pb").innerHTML=svg("0 0 510 466",g,"PB Stack power banks in three sizes: 2, 4 and 8 cells in a clear housing, with mixed green and orange cells");
+})();
+
+/* DR-1 */
+(function(){
+  var g='';
+  g+='<rect class="steel" x="14" y="92" width="70" height="7" rx="1"/>';
+  g+='<path class="dv2" d="M84 76L132 68V124L84 116Z"/>';
+  for(var i=0;i<5;i++){g+='<line class="thin" x1="'+(92+i*8)+'" y1="'+(76-i*1.6)+'" x2="'+(92+i*8)+'" y2="'+(116+i*1.6)+'"/>';}
+  g+='<rect class="dv2" x="132" y="62" width="28" height="68" rx="4"/>';
+  for(i=0;i<6;i++){g+='<line class="thin" x1="'+(135+i*4.4)+'" y1="62" x2="'+(135+i*4.4)+'" y2="130"/>';}
+  g+='<path class="dv" d="M160 54H382Q412 54 412 84V110Q412 138 382 138H160Z"/>';
+  for(i=0;i<5;i++){g+='<rect class="inkS" x="'+(338+i*12)+'" y="72" width="5" height="22" rx="2.5"/>';}
+  g+='<rect class="bgf" x="232" y="68" width="60" height="16" rx="3" style="stroke:var(--ink);stroke-width:1"/><text class="lbl k" x="262" y="79.5" text-anchor="middle">DR-1</text>';
+  // grip = bay
+  g+='<path class="gl" d="M258 138L250 290H342L334 138Z"/>';
+  var d=cellDims("BB",1.62);
+  g+=cell({x:262,y:152,fmt:"BB",chem:"li",s:1.62,rot:-90,code:"BB·66",fs:.34,tx:.2});
+  g+=cell({x:266+d.D,y:152,fmt:"BB",chem:"li",s:1.62,rot:-90,code:"BB·66",fs:.34,tx:.2});
+  g+='<path class="ln" d="M258 138L250 290H342L334 138"/>';
+  // trigger
+  g+='<path class="inkS" d="M258 150Q236 156 240 190L254 188Z"/>';
+  g+='<rect class="dv2" x="290" y="130" width="24" height="10" rx="2"/>';
+  // foot
+  g+='<rect class="dv" x="232" y="288" width="128" height="34" rx="9"/>';
+  for(i=0;i<5;i++){g+='<rect class="'+(i<4?'inkS':'bgf')+'" style="stroke:var(--ink);stroke-width:.8" x="'+(248+i*11)+'" y="301" width="8" height="8"/>';}
+  g+='<rect class="bgf" x="320" y="300" width="22" height="10" rx="5" style="stroke:var(--ink);stroke-width:1.2"/>';
+  // callouts
+  g+=callout(300,200,352,196,"GRIP = 2-SLOT BAY","P5 FOR FULL TORQUE");
+  g+=callout(270,305,160,300,"POWER GAUGE","THROTTLE SHOWN IN AMBER","end");
+  g+=callout(331,305,392,262,"USB-C PD 100 W","CHARGE IN PLACE");
+  g+=callout(146,64,146,26,"12-STEP CLUTCH","");
+  document.getElementById("p-dr1").innerHTML=svg("0 0 500 336",g,"DR-1 Brace drill driver with a clear grip holding two green BB cells");
+})();
+
+/* RX-1 */
+(function(){
+  var g='';
+  g+='<line class="ln" x1="418" y1="74" x2="468" y2="8"/><circle cx="468" cy="8" r="3" class="ink"/>';
+  g+='<path d="M112 72V42Q112 26 128 26H352Q368 26 368 42V72" style="fill:none;stroke:var(--ink);stroke-width:13;stroke-linecap:round"/>';
+  g+='<path d="M112 72V42Q112 26 128 26H352Q368 26 368 42V72" style="fill:none;stroke:var(--dev-2);stroke-width:9;stroke-linecap:round"/>';
+  g+='<rect class="dv" x="40" y="70" width="400" height="188" rx="14"/>';
+  // solar strip
+  g+='<rect x="140" y="58" width="200" height="12" style="fill:#18222A;stroke:var(--ink);stroke-width:1"/>';
+  for(var i=1;i<10;i++){g+='<line x1="'+(140+i*20)+'" x2="'+(140+i*20)+'" y1="58" y2="70" style="stroke:#4B6070;stroke-width:.8"/>';}
+  // speaker
+  var cx=136,cy=164,R=66;
+  g+='<circle class="dv2" cx="'+cx+'" cy="'+cy+'" r="'+(R+6)+'"/>';
+  for(var yy=-R;yy<=R;yy+=8.5){for(var xx=-R;xx<=R;xx+=8.5){var ox=xx+((Math.round((yy+R)/8.5))%2?4.25:0);if(ox*ox+yy*yy<(R-3)*(R-3))g+='<circle cx="'+f1(cx+ox)+'" cy="'+f1(cy+yy)+'" r="2.1" class="ink"/>';}}
+  // screen
+  g+='<rect class="scr" x="236" y="96" width="176" height="66" rx="3" style="stroke:var(--ink);stroke-width:1.5"/>';
+  g+='<text class="scr-t" x="248" y="126" font-size="22" style="font-family:var(--fd);font-weight:900;font-stretch:118%">DAB+ 12D</text>';
+  g+='<text class="scr-t" x="248" y="148" font-size="9" style="fill:var(--scr-dim)">LOCAL · 21:40 · BAY 2/3 · 31 H</text>';
+  for(i=0;i<4;i++){g+='<rect x="'+(386+i*5)+'" y="'+(124-i*4)+'" width="3" height="'+(6+i*4)+'" style="fill:var(--scr-ink)"/>';}
+  // knobs
+  [[268,214],[380,214]].forEach(function(k){
+    g+='<circle class="dv2" cx="'+k[0]+'" cy="'+k[1]+'" r="22"/><circle class="dv" cx="'+k[0]+'" cy="'+k[1]+'" r="15"/><line class="ln" x1="'+k[0]+'" y1="'+(k[1]-15)+'" x2="'+k[0]+'" y2="'+(k[1]-6)+'"/>';
+  });
+  for(i=0;i<3;i++){g+='<rect class="'+(i===0?'inkS':'dv2')+'" x="'+(302+i*18)+'" y="206" width="12" height="16" rx="2"/>';}
+  g+='<text class="lbl" x="324" y="251" text-anchor="middle">SOS · ALERT · LIGHT</text>';
+  // crank
+  g+='<rect class="dv2" x="440" y="130" width="12" height="70" rx="3"/><line class="ln" style="stroke-width:5" x1="446" y1="165" x2="472" y2="204"/><circle class="dv" cx="472" cy="206" r="7"/>';
+  // bay
+  g+='<rect class="gl" x="52" y="262" width="376" height="52" rx="8"/>';
+  var slots=[["B94"],["BB32"],[null]];
+  var s=1.48, B=cellDims("B",s);
+  slots.forEach(function(sl,j){
+    var sx=62+j*(B.L+9), id=sl[0];
+    g+='<rect class="c-empty" style="opacity:.6" x="'+sx+'" y="270" width="'+f1(B.L)+'" height="36" rx="4"/>';
+    if(id){var c=BY[id],cd=cellDims(c.fmt,s);g+=cell({x:sx,y:288-cd.D/2,fmt:c.fmt,chem:c.chem,s:s,code:c.code,fs:.44,tx:.2});}
+    else g+='<text class="lbl" x="'+f1(sx+B.L/2)+'" y="291" text-anchor="middle">EMPTY · OK</text>';
+  });
+  g+=callout(240,310,250,330,"3-SLOT BAY · ANY MIX","B·94 + BB·32 + NOTHING STILL RUNS");
+  g+=callout(300,64,300,14,"2 W SOLAR STRIP","");
+  document.getElementById("p-rx1").innerHTML=svg("0 0 500 350",g,"RX-1 Relay radio with a three-slot bay holding a green B cell, an orange BB cell and an empty slot");
+})();
+
+/* CH-1 */
+(function(){
+  var g='', s=2.2, d=cellDims("BB",s);
+  g+='<rect class="dv" x="26" y="44" width="292" height="84" rx="22"/>';
+  g+='<rect class="gl" x="44" y="56" width="'+f1(FMT.B.L*s+10)+'" height="60" rx="6"/>';
+  g+=cell({x:50,y:86-d.D/2,fmt:"BB",chem:"li",s:s,code:"BB·74",fs:.44,tx:.22});
+  g+='<rect class="scr" x="264" y="60" width="34" height="52" rx="3"/>';
+  g+='<text class="scr-t" x="281" y="84" font-size="13" text-anchor="middle" style="font-family:var(--fd);font-weight:900">94</text><text class="scr-t" x="281" y="98" font-size="7" text-anchor="middle" style="fill:var(--scr-dim)">SOH</text>';
+  g+='<rect class="inkS" x="318" y="76" width="9" height="20" rx="3"/>';
+  g+='<circle cx="44" cy="44" r="8" class="dv2"/><circle cx="44" cy="44" r="3.5" class="bgf" style="stroke:var(--ink)"/>';
+  g+=callout(322,84,330,22,"USB-C IN / OUT","","end");
+  g+=callout(160,112,170,150,"TAKES BBB · BB · B","");
+  document.getElementById("p-ch1").innerHTML=svg("0 0 350 162",g,"CH-1 Pip single-slot charger with a green BB cell");
+})();
+
+/* CH-4 */
+(function(){
+  var g='', s=1.55, ids=["B94","BB74","BB32","BBB22"], B=cellDims("B",s);
+  g+='<rect class="dv" x="40" y="18" width="270" height="196" rx="14"/>';
+  ids.forEach(function(id,i){
+    var c=BY[id], cd=cellDims(c.fmt,s), sx=58+i*62, sy=30;
+    g+='<rect class="gl" x="'+sx+'" y="'+sy+'" width="48" height="'+f1(B.L+10)+'" rx="6"/>';
+    g+=cell({x:sx+24-cd.D/2,y:sy+5+(B.L-cd.L),fmt:c.fmt,chem:c.chem,s:s,rot:-90,code:c.code,fs:.36,tx:.2});
+  });
+  g+='<rect x="58" y="164" width="234" height="36" rx="2" style="fill:#D5D8CF;stroke:var(--ink);stroke-width:1.2"/>';
+  var st=["1 · 100%","2 · 88%","3 · STORE","4 · TEST"];
+  st.forEach(function(t,i){g+='<text x="'+(64+i*58.5)+'" y="186" font-size="9.5" style="font-family:var(--fm);font-stretch:80%;fill:#141716">'+t+'</text>';});
+  document.getElementById("p-ch4").innerHTML=svg("0 0 350 230",g,"CH-4 Quad four-slot charger holding B, BB and BBB cells, with an e-ink status line");
+})();
+
+/* ================= CH-12 BARREL ================= */
+(function(){
+  var POOL=[
+    {id:"BB74",soh:96,cyc:88, ir:28,st:"Full",v:"4.20 V · 100%",host:"FL-1 Wick"},
+    {id:"BB74",soh:91,cyc:212,ir:31,st:"Charging",v:"3.94 V · 82% · 18 min",host:"RX-1 Relay"},
+    {id:"B94", soh:99,cyc:12, ir:19,st:"Full",v:"4.20 V · 100%",host:"PB-4 Stack"},
+    null,
+    {id:"BB32",soh:97,cyc:640,ir:22,st:"Storage",v:"3.30 V · 50%",host:"RX-1 Relay"},
+    {id:"B88", soh:93,cyc:150,ir:14,st:"Charging",v:"3.71 V · 41% · 34 min",host:"DR-1 Brace"},
+    {id:"BB66",soh:68,cyc:780,ir:58,st:"Retire",v:"Capacity 68% of rated · recycle",host:"DR-1 Brace"},
+    {id:"BBB22",soh:95,cyc:40,ir:61,st:"Full",v:"4.20 V · 100%",host:"Controller"},
+    {id:"B53", soh:100,cyc:3,ir:16,st:"Testing",v:"Discharging 1.4 A · 1.93 of 2.80 Ah",host:"New cell"},
+    null,
+    {id:"BB74",soh:88,cyc:301,ir:34,st:"Storage",v:"3.80 V · 55%",host:"Controller"},
+    {id:"B94", soh:97,cyc:45, ir:20,st:"Charging",v:"4.05 V · 90% · 9 min",host:"FL-1 Wick"}
+  ];
+  var C=200, R=118, g='', rot=0, sel=1;
+  var RAD={B:30,BB:26,BBB:20};
+  g+='<circle class="dv" cx="'+C+'" cy="'+C+'" r="190"/>';
+  for(var i=0;i<90;i++){var a=i*4*Math.PI/180;g+='<line class="thin" x1="'+f1(C+182*Math.sin(a))+'" y1="'+f1(C-182*Math.cos(a))+'" x2="'+f1(C+190*Math.sin(a))+'" y2="'+f1(C-190*Math.cos(a))+'"/>';}
+  var inner='<circle class="dv2" cx="'+C+'" cy="'+C+'" r="172"/>';
+  POOL.forEach(function(p,k){
+    var a=k*30*Math.PI/180, x=C+R*Math.sin(a), y=C-R*Math.cos(a), lx=C+158*Math.sin(a), ly=C-158*Math.cos(a);
+    inner+='<g class="chamber" data-k="'+k+'" style="cursor:pointer">';
+    inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="35" class="bgf" style="stroke:var(--ink);stroke-width:1.5"/>';
+    if(p){
+      var c=BY[p.id], r=RAD[c.fmt];
+      inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="'+r+'" class="c-'+c.chem+'" style="stroke:rgba(0,0,0,.5);stroke-width:1"/>';
+      inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="'+f1(r*.74)+'" class="c-cap"/>';
+      inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="'+f1(r*.58)+'" class="c-ring" style="stroke:#C9A640"/>';
+      if(p.st==="Retire") inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="39" style="fill:none;stroke:var(--warn);stroke-width:3;stroke-dasharray:5 3"/>';
+      inner+='<text class="c-capt" x="'+f1(x)+'" y="'+f1(y+3.4)+'" font-size="'+(c.fmt==="BBB"?7:8.5)+'" text-anchor="middle">'+c.code+'</text>';
+    } else {
+      inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="24" class="c-empty"/>';
+      inner+='<text class="lbl" x="'+f1(x)+'" y="'+f1(y+3)+'" text-anchor="middle">EMPTY</text>';
+    }
+    inner+='</g>';
+    inner+='<text class="lbl" x="'+f1(lx)+'" y="'+f1(ly+3)+'" text-anchor="middle">'+(k+1<10?"0":"")+(k+1)+'</text>';
+  });
+  g+='<g id="rot">'+inner+'</g>';
+  g+='<circle class="dv" cx="'+C+'" cy="'+C+'" r="50"/><circle class="thin" cx="'+C+'" cy="'+C+'" r="44"/>';
+  g+='<text class="lbl-lg" x="'+C+'" y="'+(C+2)+'" font-size="18" text-anchor="middle">CH-12</text><text class="lbl" x="'+C+'" y="'+(C+16)+'" text-anchor="middle">BARREL</text>';
+  // read head (fixed)
+  g+='<circle cx="'+C+'" cy="'+(C-R)+'" r="42" style="fill:none;stroke:var(--ink);stroke-width:2.5"/>';
+  g+='<path class="ink" d="M'+(C-9)+' 0H'+(C+9)+'L'+C+' 14Z"/>';
+  document.getElementById("p-ch12").innerHTML=svg("0 0 400 400",g,"CH-12 Barrel charger, top view, twelve chambers holding cells of different sizes and chemistries");
+
+  var rotEl=document.getElementById("rot"), scr=document.getElementById("bx-screen"), poolEl=document.getElementById("bx-pool");
+  var ph='';
+  POOL.forEach(function(p,k){
+    var n=(k+1<10?"0":"")+(k+1);
+    ph+='<button type="button" data-k="'+k+'" aria-pressed="false" aria-label="Chamber '+n+(p?", "+BY[p.id].code+", "+p.st:", empty")+'"><span>'+n+'</span><i style="background:'+(p?(p.st==="Retire"?'var(--warn)':'var(--'+BY[p.id].chem+')'):'transparent;border:1px dashed var(--ink-3)')+'"></i><span>'+(p?BY[p.id].code:"—")+'</span></button>';
+  });
+  poolEl.innerHTML=ph;
+
+  function show(){
+    rotEl.style.transform='rotate('+rot+'deg)';
+    rotEl.querySelectorAll("text").forEach(function(t){t.style.transform='rotate('+(-rot)+'deg)';});
+    poolEl.querySelectorAll("button").forEach(function(b){b.setAttribute("aria-pressed",String(+b.dataset.k===sel));});
+    var p=POOL[sel], n=(sel+1<10?"0":"")+(sel+1), h='';
+    h+='<div class="row"><span>CH-12 · Chamber '+n+'</span><span>Pool 10/12 · avg health 92%</span></div>';
+    if(!p){
+      h+='<div class="big">EMPTY</div><div class="state">Slide in any UBS cell · BBB · BB · B</div>';
+      h+='<dl><div><dt>Accepts</dt><dd>Any size</dd></div><div><dt>Chemistry</dt><dd>Any</dd></div><div><dt>Rate</dt><dd>3 A max</dd></div></dl>';
+    } else {
+      var c=BY[p.id], ch=CHEM[c.chem], bars='';
+      for(var i=0;i<20;i++){bars+='<i class="'+(i<Math.round(p.soh/5)?(p.soh<70?'on low':'on'):'')+'"></i>';}
+      h+='<div class="big"><i style="background:var(--'+c.chem+')"></i>'+c.code+'</div>';
+      h+='<div class="row" style="color:var(--scr-ink)"><span>'+ch.name+' · '+ch.v.toFixed(1)+' V · '+c.wh.toFixed(1)+' Wh · '+Math.round(c.w)+' W</span></div>';
+      h+='<div class="state'+(p.st==="Retire"?' retire':'')+'">'+p.st+' · '+p.v+'</div>';
+      h+='<div class="row"><span>Health</span><span>'+p.soh+'%</span></div><div class="soh">'+bars+'</div>';
+      h+='<dl><div><dt>Cycles</dt><dd>'+p.cyc+'</dd></div><div><dt>Resistance</dt><dd>'+p.ir+' mΩ</dd></div><div><dt>Last host</dt><dd>'+p.host+'</dd></div></dl>';
+    }
+    scr.innerHTML=h;
+  }
+  function go(k){
+    var delta=((k-sel)%12+12)%12; if(delta>6)delta-=12;
+    rot-=delta*30; sel=((k%12)+12)%12; show();
+  }
+  document.getElementById("bx-prev").addEventListener("click",function(){go(sel-1);});
+  document.getElementById("bx-next").addEventListener("click",function(){go(sel+1);});
+  poolEl.addEventListener("click",function(e){var b=e.target.closest("button");if(b)go(+b.dataset.k);});
+  rotEl.addEventListener("click",function(e){var ch=e.target.closest(".chamber");if(ch)go(+ch.dataset.k);});
+  document.getElementById("barrel").addEventListener("keydown",function(e){
+    if(e.target.tagName==="SELECT"||e.target.tagName==="INPUT")return;
+    if(e.key==="ArrowRight"){go(sel+1);e.preventDefault();} else if(e.key==="ArrowLeft"){go(sel-1);e.preventDefault();}
+  });
+  rot=-sel*30; show();
+})();
+
+/* ================= §6 BAY ================= */
+(function(){
+  var LOADS={radio:{avg:1.2,peak:6,name:"RX-1 radio"},light:{avg:5,peak:25,name:"FL-1 on high"},drill:{avg:40,peak:180,name:"DR-1 drill"}};
+  var EFF=.92, sel=[document.getElementById("bay-s0"),document.getElementById("bay-s1"),document.getElementById("bay-s2")];
+  var opts='<option value="">Empty</option>'+CELLS.map(function(c){return '<option value="'+c.id+'">'+c.code+' · '+CHEM[c.chem].name+' · '+c.wh.toFixed(1)+' Wh · '+Math.round(c.w)+' W</option>';}).join("");
+  var init=["B94","BB32",""];
+  sel.forEach(function(s,i){s.innerHTML=opts;s.value=init[i];});
+  function fmtT(h){if(!isFinite(h)||h<=0)return "–";if(h>=48)return Math.round(h/24)+" days";if(h>=1)return (h>=10?Math.round(h):h.toFixed(1))+" h";return Math.round(h*60)+" min";}
+  function upd(){
+    var load=LOADS[document.getElementById("bay-load").value], cells=sel.map(function(s){return s.value?BY[s.value]:null;});
+    var wh=0,w=0,g=0,chems={};
+    cells.forEach(function(c){if(c){wh+=c.wh;w+=c.w;g+=c.g;chems[c.chem]=1;}});
+    var uwh=wh*EFF, uw=w*EFF;
+    document.getElementById("bay-wh").textContent=uwh?uwh.toFixed(1)+" Wh":"0 Wh";
+    document.getElementById("bay-rt").textContent=uwh?fmtT(uwh/load.avg):"–";
+    document.getElementById("bay-pw").textContent=Math.round(uw)+" / "+load.peak+" W";
+    document.getElementById("bay-g").textContent=g+" g";
+    var st=document.getElementById("bay-status"), mixed=Object.keys(chems).length>1;
+    if(!wh){st.className="status warn";st.textContent="No cells · add one to any slot";}
+    else if(uw>=load.peak){st.className="status ok";st.textContent="Full power for "+load.name+(mixed?" · mixed chemistry OK":"");}
+    else {st.className="status warn";st.textContent="Runs, throttled to "+Math.round(uw/load.peak*100)+"% of peak. Add a cell or use a higher P class.";}
+    // drawing
+    var s=2.45, B=cellDims("B",s), out='', slotW=B.L+10, slotH=B.D+10, busX=slotW+118;
+    cells.forEach(function(c,i){
+      var y=12+i*(slotH+14), cy=y+slotH/2;
+      out+='<rect class="gl" x="8" y="'+y+'" width="'+f1(slotW)+'" height="'+f1(slotH)+'" rx="6"/>';
+      out+='<text class="lbl" x="14" y="'+(y-3)+'">SLOT 0'+(i+1)+'</text>';
+      if(c){var cd=cellDims(c.fmt,s);out+=cell({x:13,y:cy-cd.D/2,fmt:c.fmt,chem:c.chem,s:s,code:c.code,fs:.42,tx:.2});}
+      else out+='<rect class="c-empty" x="14" y="'+(y+6)+'" width="'+f1(slotW-12)+'" height="'+f1(slotH-12)+'" rx="4"/><text class="lbl" x="'+f1(8+slotW/2)+'" y="'+f1(cy+3)+'" text-anchor="middle">EMPTY</text>';
+      var bx=slotW+22;
+      out+='<line class="ln" x1="'+f1(slotW+8)+'" y1="'+f1(cy)+'" x2="'+bx+'" y2="'+f1(cy)+'"/>';
+      out+='<rect class="pcb" x="'+bx+'" y="'+f1(cy-17)+'" width="52" height="34" rx="2"/>';
+      out+='<text class="scr-t" x="'+(bx+26)+'" y="'+f1(cy+3.5)+'" font-size="9" text-anchor="middle">DC/DC</text>';
+      var share=c&&wh?Math.round(c.wh/wh*100):0;
+      out+='<line class="ln'+(c?' flow':'')+'" style="'+(c?'':'opacity:.25')+'" x1="'+(bx+52)+'" y1="'+f1(cy)+'" x2="'+busX+'" y2="'+f1(cy)+'"/>';
+      out+='<text class="lbl k" x="'+(bx+58)+'" y="'+f1(cy-6)+'">'+(c?share+"%":"—")+'</text>';
+    });
+    var top=12+slotH/2, bot=12+2*(slotH+14)+slotH/2;
+    out+='<line class="ln" style="stroke-width:3" x1="'+busX+'" y1="'+f1(top)+'" x2="'+busX+'" y2="'+f1(bot)+'"/>';
+    out+='<text class="lbl k" x="'+(busX-4)+'" y="'+f1(bot+22)+'" text-anchor="middle">BUS 12 V</text>';
+    var dx=busX+26, mid=(top+bot)/2;
+    out+='<line class="ln flow" x1="'+busX+'" y1="'+f1(mid)+'" x2="'+dx+'" y2="'+f1(mid)+'"/>';
+    out+='<rect class="dv" x="'+dx+'" y="'+f1(mid-50)+'" width="108" height="100" rx="8"/>';
+    out+='<text class="lbl-lg" x="'+(dx+12)+'" y="'+f1(mid-24)+'" font-size="15">DEVICE</text>';
+    out+='<text class="lbl" x="'+(dx+12)+'" y="'+f1(mid-6)+'">'+load.name.toUpperCase()+'</text>';
+    out+='<text class="lbl" x="'+(dx+12)+'" y="'+f1(mid+10)+'">AVG '+load.avg+' W</text>';
+    out+='<text class="lbl" x="'+(dx+12)+'" y="'+f1(mid+24)+'">PEAK '+load.peak+' W</text>';
+    var H=12+3*(slotH+14)+18;
+    document.getElementById("bay-svg").innerHTML=svg("0 0 "+(dx+114)+" "+H,out,"A three-slot UBS bay: each slot feeds its own converter, which feeds a shared bus to the device");
+  }
+  sel.concat([document.getElementById("bay-load")]).forEach(function(s){s.addEventListener("change",upd);});
+  upd();
+})();
+
+})();
+</script>
+</body>
+</html>
