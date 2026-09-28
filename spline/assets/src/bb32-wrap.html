@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Martian+Mono:wdth,wght@75..112.5,300..700&display=swap">
+<title>BB·32 wrap texture</title>
+<style>
+/* Wrap texture for the UBS BB·32 cell. 1 px = 0.1 mm. Width runs along the cell axis
+   (negative end on the left, cap on the right). Height is the full circumference.
+   The label is printed twice, 180° apart, so one copy always faces the camera. */
+html,body{margin:0;background:transparent}
+#tex{width:610px;height:584px;background:#FF6A1A;position:relative;overflow:hidden;font-family:"Archivo",Arial,sans-serif;color:#0C0E0D}
+.half{position:absolute;left:0;width:610px;height:292px}
+.half.b{top:292px}
+.code{position:absolute;left:96px;top:92px;font-size:96px;font-weight:850;font-stretch:100%;letter-spacing:-1px;line-height:1}
+.fine{position:absolute;left:100px;top:62px;font-family:"Martian Mono",monospace;font-stretch:80%;font-size:12.5px;letter-spacing:.6px;opacity:.82}
+.brand{position:absolute;left:100px;top:204px;font-family:"Archivo";font-weight:900;font-stretch:125%;font-size:15px;letter-spacing:1.5px}
+.serial{position:absolute;left:100px;top:226px;font-family:"Martian Mono",monospace;font-stretch:80%;font-size:10px;letter-spacing:.5px;opacity:.7}
+.bars{position:absolute;left:418px;top:196px;display:flex;gap:1.6px;height:40px;align-items:stretch}
+.bars i{display:block;background:#0C0E0D}
+.nfc{position:absolute;left:418px;top:104px;width:46px;height:46px}
+.nfc-t{position:absolute;left:470px;top:118px;font-family:"Martian Mono",monospace;font-stretch:80%;font-size:10px;line-height:1.35;letter-spacing:.5px;opacity:.8}
+.rule{position:absolute;left:96px;right:40px;top:186px;height:1.2px;background:#0C0E0D;opacity:.35}
+</style></head><body>
+<div id="tex">
+  <div class="half a"></div><div class="half b"></div>
+</div>
+<script>
+var html='<div class="fine">UBS · LIFEPO₄ · 3.2 V · 5.8 Wh · 16 W</div><div class="code">BB·32</div><div class="rule"></div>'+
+ '<svg class="nfc" viewBox="0 0 46 46"><circle cx="10" cy="23" r="4" fill="#0C0E0D"/><path d="M19 11a17 17 0 0 1 0 24M27 5a25 25 0 0 1 0 36" fill="none" stroke="#0C0E0D" stroke-width="3.2" stroke-linecap="round"/></svg>'+
+ '<div class="nfc-t">TAP TO<br>READ</div>'+
+ '<div class="brand">ANODYNE</div><div class="serial">3M8Q-2207 · 2026-03 · PROTECTED</div>';
+var s=7,b='';function r(){s=(s*9301+49297)%233280;return s/233280;}
+for(var w=0;w<150;){var bw=r()<.5?1.6:(r()<.6?3.2:5);b+='<i style="width:'+bw+'px"></i>';w+=bw+1.6;}
+html+='<div class="bars">'+b+'</div>';
+document.querySelectorAll('.half').forEach(function(h){h.innerHTML=html;});
+</script></body></html>

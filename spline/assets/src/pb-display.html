@@ -1,0 +1,39 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Martian+Mono:wdth,wght@75..112.5,300..700&display=swap">
+<title>PB Stack display</title>
+<style>
+/* PB Stack core display, 2:1. Rendered at 3x (1140 x 570). Pure black so it
+   disappears into the black glass when the screen is "off" around the UI. */
+html,body{margin:0;background:#000}
+#scr{width:380px;height:190px;background:#000;color:#F2F5F1;position:relative;font-family:"Archivo",Arial,sans-serif;overflow:hidden}
+.m{font-family:"Martian Mono",monospace;font-stretch:80%;letter-spacing:.8px;text-transform:uppercase}
+.dim{color:#7D8781}
+.top{position:absolute;left:18px;right:18px;top:14px;display:flex;justify-content:space-between;font-size:9.5px}
+.big{position:absolute;left:16px;top:28px;font-weight:800;font-stretch:112%;font-size:88px;line-height:1;letter-spacing:-3px}
+.big small{font-size:26px;letter-spacing:0;color:#7D8781;margin-left:4px;font-weight:700}
+.left{position:absolute;left:19px;top:120px;font-size:9.5px}
+.ports{position:absolute;left:214px;top:34px;width:148px;display:grid;gap:10px}
+.port{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:8px;border-top:1px solid #262A28;padding-top:7px}
+.chip{font-size:9px;border:1px solid #F2F5F1;border-radius:3px;padding:1px 4px}
+.port .w{font-weight:800;font-stretch:110%;font-size:26px;letter-spacing:-.5px}
+.port .w small{font-size:12px;color:#7D8781;margin-left:2px}
+.slots{position:absolute;left:18px;right:18px;bottom:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.slot{display:grid;gap:4px}
+.slot .bar{height:7px;border-radius:2px;background:#1C1F1D;position:relative;overflow:hidden}
+.slot .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:2px}
+.slot .lbl{display:flex;justify-content:space-between;font-size:8.5px}
+</style></head><body>
+<div id="scr">
+  <div class="top m"><span>PB-4 · 2 modules</span><span class="dim">37 Wh · 4 cells</span></div>
+  <div class="big">86<small>%</small></div>
+  <div class="left m dim">0 h 52 min at this rate</div>
+  <div class="ports">
+    <div class="port m"><span class="chip">C1</span><span class="dim">OUT ▲</span><span class="w">65<small>W</small></span></div>
+    <div class="port m"><span class="chip">C2</span><span class="dim">IN ▼</span><span class="w">30<small>W</small></span></div>
+  </div>
+  <div class="slots m">
+    <div class="slot"><div class="bar"><i style="width:88%;background:#2FE070"></i></div><div class="lbl"><span>BB·74</span><span class="dim">88</span></div></div>
+    <div class="slot"><div class="bar"><i style="width:87%;background:#2FE070"></i></div><div class="lbl"><span>BB·74</span><span class="dim">87</span></div></div>
+    <div class="slot"><div class="bar"><i style="width:84%;background:#FF6A1A"></i></div><div class="lbl"><span>BB·32</span><span class="dim">84</span></div></div>
+    <div class="slot"><div class="bar"><i style="width:85%;background:#FF6A1A"></i></div><div class="lbl"><span>BB·32</span><span class="dim">85</span></div></div>
+  </div>
+</div></body></html>

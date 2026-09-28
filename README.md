@@ -40,6 +40,10 @@ Every product ships empty.
 
 Tool brands already run one battery across their own tools (Ryobi ONE+, Makita LXT, Milwaukee M18, DeWalt), and alliances like Bosch's Power for All and Metabo's CAS share one across several brands. UBS makes that idea public, the way USB-C replaced proprietary chargers. EU rules also require user-replaceable batteries in most portable appliances from February 2027.
 
+## 3D (Spline)
+
+Briefs for three 3D scenes (BB·74 cell, CH-1 Pip, PB Stack), with ready-made label and display images, are in [`spline/`](spline/README.md).
+
 ## Open questions
 
 Keeping BBB out of AA devices, NFC on metal cans and in metal devices, reading many cells quickly, independent rating verification, in-device charging rules, bay efficiency, whether any-way-in slots should be required, credit versus cash for returns, and sodium-ion's 0 V storage versus the over-discharge rule.
