@@ -4,7 +4,7 @@
 
 - **UBS (Universal Battery System):** a concept for an open standard for rechargeable cells. The full summary is in `README.md`.
 - **Anodyne:** a fictional hardware brand that builds for UBS. Every product ships without cells.
-- **`index.html`:** the whole website in one self-contained file (inline CSS and JS, Google Fonts only). It is published with GitHub Pages from the branch `claude/ubs-brand-website-5l44j7` at https://tagelokoy.github.io/UBS/.
+- **`index.html`:** the whole website in one self-contained file (inline CSS and JS, Google Fonts only). It is published with GitHub Pages from `main` at https://tagelokoy.github.io/UBS/.
 
 ## Working on the site
 
@@ -27,8 +27,10 @@ The Spline desktop app exposes an MCP server. When it's connected (check with `/
    - Keep the existing SVG drawing as the fallback and as the poster shown before the scene loads.
    - Respect `prefers-reduced-motion`.
    - Don't let the scene capture page scroll or zoom.
-6. Check the result on the GitHub Pages site, including on an iPad. Keep to at most three live 3D scenes on the page.
+6. Check the result on an iPad before it's merged to `main`. Keep to at most three live 3D scenes on the page.
 
 ## Git
 
-Work on `claude/ubs-brand-website-5l44j7` and push there. GitHub Pages deploys from that branch.
+- `main` is the live site. GitHub Pages deploys from it, so every change on `main` is public within a minute or two.
+- Don't commit to `main` directly. Work on a branch, push it, and open a pull request. The owner merges it when it's ready to go live.
+- Before starting, pull the latest `main`. Another Claude session may be working on the same repo.
