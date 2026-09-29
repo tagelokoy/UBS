@@ -288,7 +288,7 @@ input[type=range]{width:100%;accent-color:var(--ink)}
 .pcode{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 .pcode b{font-size:clamp(48px,6vw,80px);font-weight:900;font-stretch:120%;line-height:.82;letter-spacing:-.02em}
 .pcode span{font-family:var(--fm);font-stretch:87%;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
-.ch .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1.5px solid var(--ink);padding-top:14px;flex-wrap:wrap}
+.app .foot,.ch .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1.5px solid var(--ink);padding-top:14px;flex-wrap:wrap}
 .prod .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1.5px solid var(--ink);padding-top:14px;flex-wrap:wrap}
 .empty-badge{font-family:var(--fm);font-stretch:87%;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;border:1.5px dashed var(--ink)}
 .variants{display:flex;flex-wrap:wrap;gap:8px}
@@ -344,10 +344,64 @@ select{font:inherit;font-family:var(--fm);font-stretch:87%;font-size:12.5px;padd
 .status{font-family:var(--fm);font-stretch:87%;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:9px 11px;border:1.5px solid var(--ink)}
 .status.ok{background:var(--ink);color:var(--bg)}
 .status.warn{background:repeating-linear-gradient(-45deg,rgba(255,210,63,.35) 0 8px,transparent 8px 16px)}
-.why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:1.5px solid var(--ink);margin-top:clamp(24px,4vw,40px)}
+.why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 0;border-top:1.5px solid var(--ink);margin-top:clamp(24px,4vw,40px)}
+.why.c4{grid-template-columns:repeat(4,minmax(0,1fr))}
 .why > div{padding:16px 18px 0 0;display:grid;gap:8px;align-content:start}
 .why p{font-size:15px;color:var(--ink-2)}
-@media (max-width:760px){.why{grid-template-columns:1fr}}
+.why .prop{font-family:var(--fm);font-size:9.5px;letter-spacing:.08em;border:1px dashed var(--ink-2);padding:1px 5px;margin-left:6px}
+@media (max-width:980px){.why.c4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){.why,.why.c4{grid-template-columns:1fr}}
+
+/* ---------- platforms ---------- */
+.evo{display:grid;gap:12px}
+.evo-row{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(3,minmax(0,2fr));border:1.5px solid var(--ink);background:var(--paper)}
+.evo-row > div{padding:16px 18px;border-right:1px solid var(--line-2);display:grid;gap:6px;align-content:start}
+.evo-row > div:last-child{border-right:0}
+.evo-row .hd{background:var(--ink);color:var(--bg)}
+.evo-row b{font-size:18px;font-weight:760;font-stretch:108%;line-height:1.15}
+.evo-row p{font-size:14px;color:var(--ink-2)}
+.evo-row .next{box-shadow:inset 0 0 0 3px var(--ink)}
+.evo-row .next b{font-size:24px;font-weight:900;font-stretch:118%}
+@media (max-width:860px){.evo-row{grid-template-columns:1fr}.evo-row > div{border-right:0;border-bottom:1px solid var(--line-2)}.evo-row > div:last-child{border-bottom:0}}
+
+/* ---------- return ---------- */
+.ret{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);border:1.5px solid var(--ink);background:var(--paper)}
+@media (max-width:900px){.ret{grid-template-columns:1fr}}
+.ret-big{padding:clamp(18px,2.5vw,30px);border-right:1.5px solid var(--ink);display:grid;gap:18px;align-content:space-between;background:var(--ink);color:var(--bg)}
+.ret-big .tag{color:inherit;opacity:.75}
+@media (max-width:900px){.ret-big{border-right:0;border-bottom:1.5px solid var(--ink)}}
+.eur{font-size:clamp(120px,19vw,250px);font-weight:900;font-stretch:125%;line-height:.78;letter-spacing:-.04em}
+.ret-body{padding:clamp(8px,1.5vw,16px) clamp(18px,2.5vw,30px)}
+.steps{list-style:none;margin:0;padding:0;counter-reset:st}
+.steps li{display:grid;grid-template-columns:3.2ch minmax(0,1fr);gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.steps li:last-child{border-bottom:0}
+.steps li::before{counter-increment:st;content:"0" counter(st);font-family:var(--fm);font-stretch:87%;font-size:12px;padding-top:4px;color:var(--ink-2)}
+.steps b{font-size:19px;font-weight:760;font-stretch:108%}
+.steps p{font-size:15px;color:var(--ink-2);margin-top:2px}
+
+/* ---------- app ---------- */
+.app{margin-top:clamp(16px,2.5vw,28px);border:1.5px solid var(--ink);background:var(--paper);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
+@media (max-width:900px){.app{grid-template-columns:1fr}}
+.app .drawing{border-right:1.5px solid var(--ink);padding:clamp(20px,3vw,40px) 16px;display:flex;justify-content:center;align-items:center}
+@media (max-width:900px){.app .drawing{border-right:0;border-bottom:1.5px solid var(--ink)}}
+.app .info{padding:clamp(18px,2.5vw,30px);display:grid;gap:16px;align-content:start}
+.phone{width:min(292px,100%);border:9px solid #111312;border-radius:38px;background:var(--scr);color:var(--scr-ink);padding:14px 14px 18px;font-family:var(--fm);font-stretch:87%;display:grid;gap:10px;box-shadow:0 0 0 1.5px var(--ink-3)}
+.phone .notch{width:74px;height:18px;border-radius:9px;background:#1B1E1C;justify-self:center}
+.phone .ph{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.09em;color:var(--scr-dim)}
+.phone .h{font-family:var(--fd);font-stretch:118%;font-weight:900;font-size:28px;line-height:1}
+.pc{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:4px 10px;align-items:center;padding:10px;border:1px solid #262B28}
+.pc i{width:8px;height:34px;display:block;grid-row:span 2}
+.pc b{font-family:var(--fd);font-weight:850;font-stretch:112%;font-size:17px;line-height:1}
+.pc small{display:block;font-size:9.5px;color:var(--scr-dim);letter-spacing:.04em;margin-top:3px}
+.pc .soc{font-size:16px;text-align:right;font-variant-numeric:tabular-nums;grid-row:span 2}
+.pc .bar{grid-column:2 / -1;height:3px;background:#262B28;position:relative}
+.pc .bar span{position:absolute;left:0;top:0;bottom:0;background:var(--scr-ink)}
+.pc.warn{border-color:var(--warn)} .pc.warn .bar span{background:var(--warn)} .pc.warn .soc{color:var(--warn)}
+.pc.live{border-color:var(--scr-ink)}
+.phone .hint{border:1px dashed #3A403C;padding:12px 10px;text-align:center;font-size:9.5px;letter-spacing:.08em;color:var(--scr-dim);line-height:1.5}
+.nfc-wave{display:inline-block;animation:wave 1.6s ease-in-out infinite}
+@keyframes wave{50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.nfc-wave{animation:none}}
 
 /* ---------- spec ---------- */
 .glance{width:100%;border-collapse:collapse;min-width:620px}
@@ -397,6 +451,7 @@ footer .tag{color:inherit;opacity:.6}
       <a href="#products">Hardware</a>
       <a href="#chargers">Chargers</a>
       <a href="#bay">Bay</a>
+      <a href="#return">Return</a>
       <a href="#spec">Spec</a>
     </nav>
     <span class="draft">UBS DRAFT 0.3</span>
@@ -434,8 +489,8 @@ footer .tag{color:inherit;opacity:.6}
 
 <div class="ticker" aria-hidden="true">
   <div class="ticker-in">
-    <span>UBS is an open standard<i>/</i>Anodyne is one of its builders<i>/</i>Any UBS cell · any UBS device<i>/</i>Ships empty<i>/</i>Cells outlive devices<i>/</i>Draft 0.3 · open for comment<i>/</i></span>
-    <span>UBS is an open standard<i>/</i>Anodyne is one of its builders<i>/</i>Any UBS cell · any UBS device<i>/</i>Ships empty<i>/</i>Cells outlive devices<i>/</i>Draft 0.3 · open for comment<i>/</i></span>
+    <span>UBS is an open standard<i>/</i>Anodyne is one of its builders<i>/</i>Any UBS cell · any UBS device<i>/</i>Ships empty<i>/</i>Cells outlive devices<i>/</i>Bring it back · €3 off<i>/</i>Draft 0.3 · open for comment<i>/</i></span>
+    <span>UBS is an open standard<i>/</i>Anodyne is one of its builders<i>/</i>Any UBS cell · any UBS device<i>/</i>Ships empty<i>/</i>Cells outlive devices<i>/</i>Bring it back · €3 off<i>/</i>Draft 0.3 · open for comment<i>/</i></span>
   </div>
 </div>
 
@@ -458,6 +513,7 @@ footer .tag{color:inherit;opacity:.6}
           <li><span>Cell passport</span><span>§4</span></li>
           <li><span>The rating code</span><span>§5</span></li>
           <li><span>Bays for devices</span><span>§6 · optional</span></li>
+          <li><span>€3 return credit</span><span>§7</span></li>
         </ul>
       </div>
       <div>
@@ -467,9 +523,10 @@ footer .tag{color:inherit;opacity:.6}
           <li><span>Cells</span><span>8 SKUs</span></li>
           <li><span>FL-1 Wick flashlight</span><span>Light</span></li>
           <li><span>PB Stack power bank</span><span>Power</span></li>
-          <li><span>DR-1 Brace drill driver</span><span>Tool</span></li>
+          <li><span>SD-1 Spindle screwdriver</span><span>Tool</span></li>
           <li><span>RX-1 Relay radio</span><span>Signal</span></li>
           <li><span>CH-1 · CH-4 · CH-12 chargers</span><span>Charge</span></li>
+          <li><span>Pool app</span><span>Free</span></li>
         </ul>
       </div>
     </div>
@@ -513,12 +570,43 @@ footer .tag{color:inherit;opacity:.6}
     </div>
 
     <div class="life" aria-label="A cell's life with UBS">
-      <div><span class="tag">Year 0</span><span class="y">4 cells</span><p>You buy a drill and four BB cells. The drill takes two, the other two go in a flashlight.</p></div>
+      <div><span class="tag">Year 0</span><span class="y">4 cells</span><p>You buy a screwdriver and four BB cells. The screwdriver takes two, the other two go in a flashlight.</p></div>
       <div><span class="tag">Year 1</span><span class="y">+1 device</span><p>A game controller arrives without a battery. It takes two cells from the flashlight.</p></div>
-      <div><span class="tag">Year 3</span><span class="y">Drill dies</span><p>The motor fails. Its two cells go into a radio. Nothing gets thrown out that still works.</p></div>
-      <div><span class="tag">Year 5</span><span class="y">1 retired</span><p>The charger flags one cell at 68% health. You recycle that cell. Only that cell.</p></div>
+      <div><span class="tag">Year 3</span><span class="y">Tool dies</span><p>The screwdriver's motor fails. Its two cells go into a radio. Nothing gets thrown out that still works.</p></div>
+      <div><span class="tag">Year 5</span><span class="y">1 retired</span><p>The charger flags one cell at 68% health. You hand it in for €3 off a new one. Only that cell.</p></div>
       <div><span class="tag">Year 6</span><span class="y">3 running</span><p>The other three are in their fourth and fifth devices, still charging on the same charger.</p></div>
     </div>
+  </div>
+</section>
+
+<!-- ================= PLATFORMS ================= -->
+<section class="sec" id="platforms">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">02</span><span>Already half-done</span></div>
+      <h2>Tool brands proved it. Then they kept it to themselves.</h2>
+      <p class="lede">Ryobi ONE+, Makita LXT, Milwaukee M18 and DeWalt each run a whole catalogue of tools from one battery. Alliances like Bosch's Power for All and Metabo's CAS go further and share one battery across several brands. People love these systems, and they prove the idea works. But every one of them stops at the edge of a brand or a club. UBS takes the same idea and makes it public.</p>
+    </div>
+    <div class="evo">
+      <div class="evo-row">
+        <div class="hd"><span class="tag" style="color:inherit;opacity:.7">Charging cables</span><b>Already happened</b></div>
+        <div><span class="tag">Then</span><b>Every brand its own plug</b><p>A drawer of chargers that each fit one phone.</p></div>
+        <div><span class="tag">Then</span><b>Micro-USB, by agreement</b><p>Phone makers signed a voluntary common-charger pledge in the EU in 2009.</p></div>
+        <div><span class="tag">Now</span><b>USB-C, by law</b><p>Required on new phones and many other devices sold in the EU since the end of 2024.</p></div>
+      </div>
+      <div class="evo-row">
+        <div class="hd"><span class="tag" style="color:inherit;opacity:.7">Batteries</span><b>Happening now</b></div>
+        <div><span class="tag">Then</span><b>Glued-in packs</b><p>The battery dies with the device, or the device dies with the battery.</p></div>
+        <div><span class="tag">Now</span><b>Brand platforms</b><p>One pack for one brand's tools. Change brands and you start your pool over.</p></div>
+        <div class="next"><span class="tag">Next</span><b>UBS</b><p>One cell for every maker's devices. Brand packs go the way of proprietary chargers.</p></div>
+      </div>
+    </div>
+    <div class="why">
+      <div><span class="tag">For you</span><h3>One pool, any brand</h3><p>Buy the best screwdriver from one maker and the best lamp from another. The cells move freely between them.</p></div>
+      <div><span class="tag">For competition</span><h3>Win on the product</h3><p>Makers earn the next sale with a better tool, not with a battery you already own.</p></div>
+      <div><span class="tag">For makers</span><h3>No pack to design</h3><p>No custom pack to engineer, certify, stock and support for ten years. Design a bay and ship.</p></div>
+    </div>
+    <p class="note" style="margin-top:32px">The law is moving the same way. From February 2027, EU rules require batteries in most portable appliances to be removable and replaceable by the user. UBS is one answer to how. Heavy tools will keep their packs for a while: a 1 kW grinder draws more than small per-slot converters handle well. UBS starts where the power is modest.</p>
   </div>
 </section>
 
@@ -564,7 +652,7 @@ footer .tag{color:inherit;opacity:.6}
           </table>
           </div>
           <dl class="kv">
-            <dt>Positive</dt><dd>Button top, Ø7 mm minimum, with passport ring</dd>
+            <dt>Positive</dt><dd>Button top, Ø7 mm minimum</dd>
             <dt>Negative</dt><dd>Flat, full diameter</dd>
             <dt>Tolerance</dt><dd>±0.2 mm on every dimension</dd>
             <dt>Room to grow</dt><dd>A is reserved for a larger future size</dd>
@@ -594,13 +682,13 @@ footer .tag{color:inherit;opacity:.6}
         <div class="body">
           <h3>Every cell protects itself and remembers its own life.</h3>
           <p>Unprotected cells are fine for people who know battery safety. A standard for everyone can't assume that. Every UBS cell carries a protection circuit in its cap, so a cell in a pocket full of keys, a cheap device or a broken charger stays safe.</p>
-          <p>The same cap holds a small memory chip: the passport. It talks over a thin ring around the positive terminal. Chargers read and write it. Devices may log to it. A device that ignores it still works. No account, no app, no cloud.</p>
+          <p>The same cap holds a fuel gauge and an NFC chip: the passport. Hold a cell to your phone and it shows its charge, health and history, even while it's running inside a device with a clear housing. It needs no extra contacts, so any device works with it without knowing it's there. The data format is open, so any app can read it. No account, no cloud.</p>
         </div>
       </div>
       <div class="two">
         <figure class="panel drawing reg" style="margin:0">
           <div id="cap-svg" style="padding:12px"></div>
-          <figcaption class="fig-cap"><span class="tag">Positive cap, exploded</span><span class="tag">Adds ≈ 3 mm to cell length</span></figcaption>
+          <figcaption class="fig-cap"><span class="tag">Positive cap, exploded</span><span class="tag">NFC antenna sits under the wrap</span></figcaption>
         </figure>
         <div style="display:grid;gap:26px">
           <div>
@@ -621,7 +709,9 @@ footer .tag{color:inherit;opacity:.6}
               <dt>Made</dt><dd class="num">2026-03</dd>
               <dt>Cycles</dt><dd class="num">212</dd>
               <dt>Health</dt><dd class="num">91% of rated capacity · 31 mΩ</dd>
-              <dt>Last host</dt><dd>RX-1 Relay · 4 days ago</dd>
+              <dt>Charge now</dt><dd class="num">64% · −1.8 A · in use</dd>
+              <dt>Last full</dt><dd>4 days ago</dd>
+              <dt>Signature</dt><dd>Valid · genuine UBS cell</dd>
               <dt>Peak temp.</dt><dd class="num">47 °C</dd>
             </dl>
           </div>
@@ -746,18 +836,19 @@ footer .tag{color:inherit;opacity:.6}
     </article>
 
     <article class="prod">
-      <div class="drawing" id="p-dr1"></div>
+      <div class="drawing" id="p-sd1"></div>
       <div class="info">
-        <div class="pcode"><b>DR-1</b><span>Brace</span></div>
-        <p>A compact drill driver whose grip is a two-slot UBS bay. Power cells give full torque. Energy cells work too; the drill says so on its LED bar and trades peak torque for longer runtime.</p>
+        <div class="pcode"><b>SD-1</b><span>Spindle</span></div>
+        <p>A long, clear screwdriver that holds two BB cells end to end. A contact plate between them gives each cell its own slot, so it runs on one cell when you want it light and on two when you want it to last. Mix them if you like. Your phone reads both through the tube.</p>
         <dl class="kv">
-          <dt>Takes</dt><dd>2 × BB or B, any mix</dd>
-          <dt>Needs</dt><dd>P5 per cell for full torque</dd>
-          <dt>Torque</dt><dd class="num">28 Nm max · 12-step clutch</dd>
-          <dt>Speed</dt><dd class="num">0–450 / 0–1500 rpm</dd>
-          <dt>Charging</dt><dd>USB-C PD 100 W in the foot, cells stay in</dd>
+          <dt>Takes</dt><dd>1 or 2 × BB, any mix</dd>
+          <dt>Needs</dt><dd>P2 · every BB cell qualifies</dd>
+          <dt>Torque</dt><dd class="num">5 Nm · 6-step collar + lock</dd>
+          <dt>Speed</dt><dd class="num">0–280 rpm · forward / reverse</dd>
+          <dt>Size</dt><dd class="num">Ø26 × 252 mm · ¼" hex bits</dd>
+          <dt>Charging</dt><dd>USB-C in the tail, cells stay in</dd>
         </dl>
-        <div class="foot"><span class="price num">€ 169</span><span class="empty-badge">Ships empty</span></div>
+        <div class="foot"><span class="price num">€ 79</span><span class="empty-badge">Ships empty</span></div>
       </div>
     </article>
 
@@ -834,6 +925,33 @@ footer .tag{color:inherit;opacity:.6}
         <div class="foot" style="display:flex;justify-content:space-between;align-items:center;border-top:1.5px solid var(--ink);padding-top:14px;gap:12px;flex-wrap:wrap"><span class="price num">€ 349</span><span class="tag">12 × 3 A · 240 W · machined dial</span></div>
       </div>
     </article>
+
+    <article class="app">
+      <div class="drawing">
+        <div class="phone" role="img" aria-label="Pool app showing four scanned cells with charge and health">
+          <div class="notch"></div>
+          <div class="ph"><span>POOL</span><span>4 SCANNED</span></div>
+          <div class="h">Your cells</div>
+          <div class="pc live"><i style="background:var(--li)"></i><div><b>BB·74</b><small>IN USE · −1.8 A · HEALTH 91%</small></div><span class="soc">64%</span><div class="bar"><span style="width:64%"></span></div></div>
+          <div class="pc"><i style="background:var(--li)"></i><div><b>B·94</b><small>IDLE · HEALTH 99%</small></div><span class="soc">100%</span><div class="bar"><span style="width:100%"></span></div></div>
+          <div class="pc"><i style="background:var(--lfp)"></i><div><b>BB·32</b><small>STORAGE · HEALTH 97%</small></div><span class="soc">50%</span><div class="bar"><span style="width:50%"></span></div></div>
+          <div class="pc warn"><i style="background:var(--li)"></i><div><b>BB·66</b><small>HEALTH 68% · RETURN FOR €3</small></div><span class="soc">RETIRE</span><div class="bar"><span style="width:68%"></span></div></div>
+          <div class="hint"><span class="nfc-wave">)))</span><br>HOLD THE NEXT CELL TO<br>THE BACK OF YOUR PHONE</div>
+        </div>
+      </div>
+      <div class="info">
+        <div class="pcode"><b>POOL</b><span>App · free</span></div>
+        <p>Tap a cell to the back of your phone and see its charge, health and history. Tap the next one, and the next, about half a second each. It works through the clear housing of a running device, so you can check a light or a screwdriver without opening it.</p>
+        <p>The passport format is part of UBS, so Pool reads every UBS cell from every maker, and anyone can build another app that does the same. It works offline, with no account.</p>
+        <dl class="kv">
+          <dt>Reads</dt><dd>Charge · current · health · cycles · temperature</dd>
+          <dt>Live</dt><dd>Through clear housings while in use</dd>
+          <dt>Flags</dt><dd>Cells to retire, and where to return them</dd>
+          <dt>Needs</dt><dd>Any phone with NFC</dd>
+        </dl>
+        <div class="foot"><span class="price">Free</span><span class="tag">iOS · Android · open data format</span></div>
+      </div>
+    </article>
   </div>
 </section>
 
@@ -853,7 +971,8 @@ footer .tag{color:inherit;opacity:.6}
           <select id="bay-load">
             <option value="radio">RX-1 Relay · radio · 1.2 W average, 6 W peak</option>
             <option value="light" selected>FL-1 Wick on high · 5 W average, 25 W peak</option>
-            <option value="drill">DR-1 Brace · 40 W average, 180 W peak</option>
+            <option value="sd">SD-1 Spindle · screwdriver · 8 W average, 40 W peak</option>
+            <option value="tool">18 V-class power tool · 120 W average, 400 W peak</option>
           </select>
         </div>
         <div class="slots">
@@ -871,19 +990,50 @@ footer .tag{color:inherit;opacity:.6}
         <div class="status" id="bay-status" aria-live="polite">–</div>
       </div>
     </div>
-    <div class="why">
+    <div class="why c4">
       <div><span class="tag">Cost</span><h3>About 8% of the energy</h3><p>Per-slot converters lose some power as heat. In return you never need matched cells, and a tired cell can't drag down a fresh one.</p></div>
       <div><span class="tag">Share</span><h3>Each cell pulls its weight</h3><p>The bay draws from each slot in proportion to its remaining energy, so all cells run out together and none is pushed past its rating.</p></div>
       <div><span class="tag">Choice</span><h3>Weight or runtime, your call</h3><p>One B cell for a light hike. Three for a week at the cabin. The device is the same.</p></div>
+      <div><span class="tag">Any way in <span class="prop">PROPOSAL</span></span><h3>Orientation stops mattering</h3><p>Each slot already has electronics, so it can flip polarity too. Slide a cell in either way round. Cells keep their + end, so they still work in simple holders.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RETURN ================= -->
+<section class="sec alt" id="return">
+  <div class="wrap">
+    <div class="sh">
+      <div class="sh-tag tag"><span class="k">UBS</span><span>§7 · Return credit · a condition of using the UBS mark</span></div>
+      <h2>Bring it back. Get €3.</h2>
+      <p class="lede">Take any worn-out UBS cell, from any maker, to any shop that sells UBS cells. You get €3 off new UBS cells for every cell you hand in. There's no deposit on the receipt and nothing to keep track of. The cell itself proves it's genuine.</p>
+    </div>
+    <div class="ret">
+      <div class="ret-big">
+        <div class="eur num">€3</div>
+        <div class="tag">Per returned cell · any size · any chemistry · any maker · any UBS shop</div>
+      </div>
+      <div class="ret-body">
+        <ol class="steps">
+          <li><div><b>Bring any UBS cell</b><p>Dead, weak, or flagged for retirement by your charger or the Pool app.</p></div></li>
+          <li><div><b>The shop taps it</b><p>NFC checks the cell's signed ID and marks it returned. A cell can only be credited once, and fakes don't pass.</p></div></li>
+          <li><div><b>Get €3 off new cells</b><p>Spend the credit on any UBS cell from any maker, in that shop or any other.</p></div></li>
+          <li><div><b>Sorted before it ships</b><p>The passport states the chemistry, so Li-ion and LiFePO₄ go to the right recycling process without anyone guessing.</p></div></li>
+        </ol>
+      </div>
+    </div>
+    <div class="why">
+      <div><span class="tag">Why it matters</span><h3>Cells in the bin start fires</h3><p>Lithium cells thrown in household waste get crushed in bin lorries and sorting plants, and some catch fire. Every cell that comes back is one that doesn't.</p></div>
+      <div><span class="tag">What comes back</span><h3>Most of the metal</h3><p>Once collected, most of a cell can be recovered. EU rules require recyclers to recover 90% of the cobalt, nickel and copper and 50% of the lithium by the end of 2027, rising to 95% and 80% by 2031.</p></div>
+      <div><span class="tag">Who pays</span><h3>Makers, through a shared pool</h3><p>Every maker pays €3 into a shared pool for each UBS cell it sells. Shops claim back the credits they hand out, so a shop that takes back more than it sells isn't out of pocket.</p></div>
     </div>
   </div>
 </section>
 
 <!-- ================= SPEC ================= -->
-<section class="sec alt" id="spec">
+<section class="sec" id="spec">
   <div class="wrap">
     <div class="sh">
-      <div class="sh-tag tag"><span class="k">UBS</span><span>§7 · At a glance · Draft 0.3</span></div>
+      <div class="sh-tag tag"><span class="k">UBS</span><span>§8 · At a glance · Draft 0.3</span></div>
       <h2>The whole spec on one table.</h2>
       <p class="lede">UBS is written to stay small enough to fit here. The full draft adds the test methods, the passport data format and the bay connector drawings.</p>
     </div>
@@ -895,9 +1045,10 @@ footer .tag{color:inherit;opacity:.6}
         <tr><td>Chemistry</td><td>§2</td><td>Green + 1 band Li-ion · orange + 2 bands LiFePO₄ · blue + 3 bands sodium-ion (reserved)</td><td>Readable at a glance, by touch, and without color vision</td></tr>
         <tr><td>Devices</td><td>§2</td><td>Accept 2.0–4.2 V per cell and every approved chemistry in their size</td><td>Any cell of the right size just works</td></tr>
         <tr><td>Protection</td><td>§3</td><td>Overcharge, over-discharge, over-current, short circuit and temperature, in the cell</td><td>Safe for people who never read a datasheet</td></tr>
-        <tr><td>Passport</td><td>§4</td><td>Ring contact · one-wire bus · identity, rating, cycles, health, last host</td><td>Health travels with the cell, not the device</td></tr>
+        <tr><td>Passport</td><td>§4</td><td>NFC tag + fuel gauge · signed identity, rating, live charge, cycles, health</td><td>Health travels with the cell, not the device</td></tr>
         <tr><td>Rating</td><td>§5</td><td>Two-digit energy·power code from a public test method</td><td>One honest number on the wrap</td></tr>
         <tr><td>Bays</td><td>§6</td><td>Universal slots, per-slot converters, shared bus (optional)</td><td>Use whatever cells you have</td></tr>
+        <tr><td>Return</td><td>§7</td><td>Any UBS seller takes back any UBS cell for €3 off new cells, funded by a shared pool</td><td>Cells come back instead of going in the bin</td></tr>
       </tbody>
     </table>
     </div>
@@ -912,7 +1063,10 @@ footer .tag{color:inherit;opacity:.6}
       </div>
       <div class="oq">
         <div><span class="tag">§1</span><h3>Keeping BBB out of AA devices</h3><p>A longer body stops most compartments from closing, but not spring-loaded ones. A keyed shoulder on the positive end is the leading proposal.</p></div>
-        <div><span class="tag">§4</span><h3>Passport contact wear</h3><p>The ring contact needs to survive thousands of insertions in dusty pockets. Gold plating works, but costs money on every cell.</p></div>
+        <div><span class="tag">§4</span><h3>NFC on a metal can</h3><p>A steel can blocks NFC unless a thin ferrite layer sits under the antenna. That works, but metal device housings still block live reading.</p></div>
+        <div><span class="tag">§4</span><h3>Reading a whole drawer</h3><p>Phones read one NFC tag at a time. Chargers can read every slot at once; a phone taps cell after cell. Is that fast enough?</p></div>
+        <div><span class="tag">§6</span><h3>Any-way-in slots</h3><p>Polarity-free slots are cheap in a bay but add loss and cost in simple devices. Should they be required, optional, or left out?</p></div>
+        <div><span class="tag">§7</span><h3>Credit or cash</h3><p>A credit only helps people who buy new cells. Should the last cell of a household pay out in cash instead?</p></div>
         <div><span class="tag">§5</span><h3>Who tests the ratings</h3><p>A public method is a start. Without independent spot checks, "BB·74" can become the new "9900 mAh".</p></div>
         <div><span class="tag">§2</span><h3>Charging inside devices</h3><p>In-device charging is allowed today if the device reads the passport. Should a device that can't read it be allowed to charge at all?</p></div>
         <div><span class="tag">§6</span><h3>Bay efficiency</h3><p>Per-slot converters cost around 8%. A bypass mode when all cells match could win most of that back.</p></div>
@@ -987,7 +1141,6 @@ function cell(o){
   g+='<rect class="c-steel" x="'+f1(bodyL-1)+'" y="'+f1((D-nubH)/2)+'" width="'+f1(nubW+1)+'" height="'+f1(nubH)+'" rx="'+f1(Math.min(nubW*.4,3))+'"/>';
   g+='<rect class="c-'+ch.cls+' c-body" x="0" y="0" width="'+f1(bodyL)+'" height="'+f1(D)+'" rx="'+f1(r)+'"/>';
   g+='<path class="c-cap" d="M'+f1(bodyL-capW)+' 0H'+f1(bodyL-r)+'A'+f1(r)+' '+f1(r)+' 0 0 1 '+f1(bodyL)+' '+f1(r)+'V'+f1(D-r)+'A'+f1(r)+' '+f1(r)+' 0 0 1 '+f1(bodyL-r)+' '+f1(D)+'H'+f1(bodyL-capW)+'Z"/>';
-  g+='<line class="c-ring" x1="'+f1(bodyL-capW*.3)+'" y1="'+f1(D*.14)+'" x2="'+f1(bodyL-capW*.3)+'" y2="'+f1(D*.86)+'"/>';
   for(var i=0;i<ch.bands;i++){g+='<rect class="c-band" x="'+f1(bodyL*.055+i*bodyL*.04)+'" y="0" width="'+f1(bodyL*.022)+'" height="'+f1(D)+'"/>';}
   if(o.code!==false){
     var fs=D*(o.fs||.4), tx=bodyL*(o.tx||.24);
@@ -996,6 +1149,8 @@ function cell(o){
   if(o.fine){
     g+='<text class="c-fine" x="'+f1(bodyL*(o.tx||.24))+'" y="'+f1(D*.22)+'" font-size="'+f1(D*.075)+'">UBS · '+ch.name.toUpperCase()+' · '+ch.v.toFixed(1)+' V'+(o.fineX||'')+'</text>';
     g+=bars(bodyL*.64,D*.62,bodyL*.18,D*.22,o.seed||7);
+    var k=D/140;
+    g+='<g transform="translate('+f1(bodyL*.585)+' '+f1(D*.73)+') scale('+f1(k*1.4)+')"><circle r="2" class="c-bar"/><path d="M5 -6a8 8 0 0 1 0 12M10 -11a15 15 0 0 1 0 22" fill="none" stroke="#0C0E0D" stroke-width="2"/></g>';
     g+='<text class="c-capt" x="'+f1(bodyL-capW+capW*.12)+'" y="'+f1(D*.56)+'" font-size="'+f1(D*.07)+'" transform="rotate(-90 '+f1(bodyL-capW+capW*.35)+' '+f1(D*.5)+')">UBS+</text>';
   }
   g+='<rect x="0" y="0" width="'+f1(bodyL)+'" height="'+f1(D)+'" rx="'+f1(r)+'" fill="url(#cylH)" pointer-events="none"/>';
@@ -1020,7 +1175,8 @@ function cellDims(fmt,s){var f=FMT[fmt];return {L:f.L*s,D:f.d*s};}
       '<text class="lbl" x="'+tx+'" y="'+(ty+13)+'" text-anchor="'+anchor+'">'+t2+'</text>';
   }
   g+=co(bandX,y+8,bandX+22,40,bandX+26,36,"start","§2 · ONE BAND = LI-ION","GREEN WRAP · READABLE BY TOUCH");
-  g+=co(ringX,y+14,ringX-22,40,ringX-26,36,"end","§4 · PASSPORT RING","DATA CONTACT · HEALTH + HISTORY");
+  var nfcX=x+bodyL*.6;
+  g+=co(nfcX,y+d.D*.73,616,40,612,36,"end","§4 · NFC PASSPORT","TAP TO READ CHARGE + HEALTH");
   g+=co(capX,y+d.D-10,616,y+d.D+36,612,y+d.D+32,"end","§3 · PROTECTION CIRCUIT","MANDATORY · INSIDE THE CAP");
   g+=co(codeX,y+d.D-24,codeX+22,y+d.D+36,codeX+26,y+d.D+32,"start","§5 · RATING CODE","E7 ≥ 12 WH · P4 ≥ 35 W");
   // dims
@@ -1031,7 +1187,7 @@ function cellDims(fmt,s){var f=FMT[fmt];return {L:f.L*s,D:f.d*s};}
   g+='<path class="dim" d="M'+(x-18)+' '+y+'H'+(x-10)+'M'+(x-18)+' '+f1(y+d.D)+'H'+(x-10)+'M'+(x-14)+' '+y+'V'+f1(y+d.D)+'"/>';
   g+='<text class="lbl k" x="'+(x-22)+'" y="'+f1(y+d.D/2)+'" text-anchor="middle" transform="rotate(-90 '+(x-22)+' '+f1(y+d.D/2)+')">Ø 18.6</text>';
   g+='<text class="lbl" x="'+f1(x+d.L)+'" y="'+(dy+26)+'" text-anchor="end">FIG. 01 · UBS BB CELL · ANODYNE BB·74</text>';
-  document.getElementById("hero-svg").innerHTML=svg("0 0 620 "+(dy+34),g,"A UBS BB cell with callouts: one chemistry band, passport ring, protection circuit and the rating code BB·74");
+  document.getElementById("hero-svg").innerHTML=svg("0 0 620 "+(dy+34),g,"A UBS BB cell with callouts: one chemistry band, NFC passport, protection circuit and the rating code BB·74");
 })();
 
 /* ================= §1 FORMATS ================= */
@@ -1080,14 +1236,14 @@ function cellDims(fmt,s){var f=FMT[fmt];return {L:f.L*s,D:f.d*s};}
 
 /* ================= §3/§4 EXPLODED CAP ================= */
 (function(){
-  var cx=118, rx=78, ry=19, g='', y0=46, step=48;
+  var cx=118, rx=78, ry=19, g='', y0=40, step=46;
   var layers=[
     ["steel","+ BUTTON","NICKEL-PLATED STEEL",.32],
-    ["ring","PASSPORT RING","GOLD-PLATED DATA CONTACT",.62],
-    ["disc","PTC FUSE","TRIPS ON SUSTAINED OVER-CURRENT",.9],
-    ["pcb","PROTECTION BOARD","IC + DUAL MOSFET · §3",1],
-    ["pcb2","PASSPORT CHIP","2 KB EEPROM · §4",.5],
-    ["can","CELL CAN + NTC","TEMPERATURE SENSED AT THE TOP",1]
+    ["disc","PTC FUSE","TRIPS ON OVER-CURRENT",.9],
+    ["pcb","PROTECTION + FUEL GAUGE","IC + MOSFETS + GAUGE · §3",1],
+    ["pcb2","NFC PASSPORT CHIP","SIGNED ID · LIVE DATA · §4",.5],
+    ["ntc","NTC SENSOR","TEMPERATURE AT THE HOT END",.36],
+    ["can","CAN + NFC ANTENNA","COIL ON FERRITE · UNDER WRAP",1]
   ];
   g+='<line class="dash" x1="'+cx+'" x2="'+cx+'" y1="20" y2="'+(y0+step*5+60)+'"/>';
   layers.forEach(function(L,i){
@@ -1095,13 +1251,16 @@ function cellDims(fmt,s){var f=FMT[fmt];return {L:f.L*s,D:f.d*s};}
     if(L[0]==="can"){
       g+='<path class="c-li c-body" d="M'+(cx-rx)+' '+y+'V'+(y+56)+'A'+rx+' '+ry+' 0 0 0 '+(cx+rx)+' '+(y+56)+'V'+y+'Z"/>';
       g+='<ellipse class="c-cap" cx="'+cx+'" cy="'+y+'" rx="'+rx+'" ry="'+ry+'" style="stroke:var(--ink);stroke-width:1"/>';
-      g+='<rect x="'+(cx+26)+'" y="'+(y-5)+'" width="12" height="7" rx="2" style="fill:#3a3f3c;stroke:#6c7570;stroke-width:.6"/>';
+      g+='<rect x="'+(cx-34)+'" y="'+(y+22)+'" width="68" height="30" rx="3" style="fill:#2A2F2C;stroke:var(--ink);stroke-width:1"/>';
+      for(var q=0;q<3;q++){g+='<rect x="'+(cx-29+q*5)+'" y="'+(y+26+q*4)+'" width="'+(58-q*10)+'" height="'+(22-q*8)+'" rx="2" style="fill:none;stroke:#C9A640;stroke-width:1.4"/>';}
     } else if(L[0]==="ring"){
       g+='<ellipse cx="'+cx+'" cy="'+y+'" rx="'+f1(r)+'" ry="'+f1(rr)+'" style="fill:none;stroke:#C9A640;stroke-width:6"/>';
       g+='<ellipse cx="'+cx+'" cy="'+y+'" rx="'+f1(r)+'" ry="'+f1(rr)+'" class="thin"/>';
     } else if(L[0]==="pcb"){
       g+='<ellipse class="pcb" cx="'+cx+'" cy="'+y+'" rx="'+f1(r)+'" ry="'+f1(rr)+'"/>';
       g+='<rect class="chip" x="'+(cx-30)+'" y="'+(y-6)+'" width="18" height="10"/><rect class="chip" x="'+(cx-6)+'" y="'+(y-8)+'" width="26" height="12"/><rect class="chip" x="'+(cx+26)+'" y="'+(y-4)+'" width="10" height="7"/>';
+    } else if(L[0]==="ntc"){
+      g+='<rect x="'+(cx-8)+'" y="'+(y-4)+'" width="16" height="8" rx="2" style="fill:#2A2F2C;stroke:var(--ink);stroke-width:1"/><path class="ln" style="stroke-width:1" d="M'+(cx-8)+' '+y+'h-10M'+(cx+8)+' '+y+'h10"/>';
     } else if(L[0]==="pcb2"){
       g+='<ellipse class="pcb" cx="'+cx+'" cy="'+y+'" rx="'+f1(r)+'" ry="'+f1(rr)+'"/><rect class="chip" x="'+(cx-9)+'" y="'+(y-5)+'" width="18" height="9"/>';
     } else if(L[0]==="steel"){
@@ -1113,7 +1272,7 @@ function cellDims(fmt,s){var f=FMT[fmt];return {L:f.L*s,D:f.d*s};}
     g+='<path class="dim" d="M'+f1(cx+r+6)+' '+y+'H236"/><circle cx="236" cy="'+y+'" r="2" class="ink"/>';
     g+='<text class="lbl k" x="244" y="'+(y-1)+'">'+L[1]+'</text><text class="lbl" x="244" y="'+(y+12)+'">'+L[2]+'</text>';
   });
-  document.getElementById("cap-svg").innerHTML=svg("0 0 420 350",g,"Exploded view of a UBS positive cap: button, passport ring, PTC fuse, protection board, passport chip and cell can");
+  document.getElementById("cap-svg").innerHTML=svg("0 0 420 358",g,"Exploded view of a UBS positive cap: button, PTC fuse, protection board with fuel gauge, NFC passport chip, temperature sensor and the can with its NFC antenna");
 })();
 
 /* ================= §5 DECODER ================= */
@@ -1241,8 +1400,8 @@ function callout(x1,y1,x2,y2,t1,t2,anchor){
       }
     }
     g+='<text class="lbl-lg" x="'+x+'" y="'+(base+24)+'" font-size="16">'+p.name+'</text>';
-    var fly = wh>100 ? "AIRLINE APPROVAL" : "CARRY-ON OK";
-    g+='<text class="lbl" x="'+x+'" y="'+(base+38)+'">'+wh.toFixed(1)+' WH · '+fly+'</text>';
+    var fly = wh>100 ? "NEEDS AIRLINE OK" : "CARRY-ON OK";
+    g+='<text class="lbl" x="'+x+'" y="'+(base+38)+'">'+Math.round(wh)+' WH · '+fly+'</text>';
   });
   g+='<line class="dash" x1="6" x2="500" y1="'+base+'" y2="'+base+'"/>';
   g+=callout(471,148,440,30,"PER-SLOT CONVERTER","MIX SIZES + CHEMISTRIES","end");
@@ -1250,36 +1409,32 @@ function callout(x1,y1,x2,y2,t1,t2,anchor){
   document.getElementById("p-pb").innerHTML=svg("0 0 510 466",g,"PB Stack power banks in three sizes: 2, 4 and 8 cells in a clear housing, with mixed green and orange cells");
 })();
 
-/* DR-1 */
+/* SD-1 */
 (function(){
-  var g='';
-  g+='<rect class="steel" x="14" y="92" width="70" height="7" rx="1"/>';
-  g+='<path class="dv2" d="M84 76L132 68V124L84 116Z"/>';
-  for(var i=0;i<5;i++){g+='<line class="thin" x1="'+(92+i*8)+'" y1="'+(76-i*1.6)+'" x2="'+(92+i*8)+'" y2="'+(116+i*1.6)+'"/>';}
-  g+='<rect class="dv2" x="132" y="62" width="28" height="68" rx="4"/>';
-  for(i=0;i<6;i++){g+='<line class="thin" x1="'+(135+i*4.4)+'" y1="62" x2="'+(135+i*4.4)+'" y2="130"/>';}
-  g+='<path class="dv" d="M160 54H382Q412 54 412 84V110Q412 138 382 138H160Z"/>';
-  for(i=0;i<5;i++){g+='<rect class="inkS" x="'+(338+i*12)+'" y="72" width="5" height="22" rx="2.5"/>';}
-  g+='<rect class="bgf" x="232" y="68" width="60" height="16" rx="3" style="stroke:var(--ink);stroke-width:1"/><text class="lbl k" x="262" y="79.5" text-anchor="middle">DR-1</text>';
-  // grip = bay
-  g+='<path class="gl" d="M258 138L250 290H342L334 138Z"/>';
-  var d=cellDims("BB",1.62);
-  g+=cell({x:262,y:152,fmt:"BB",chem:"li",s:1.62,rot:-90,code:"BB·66",fs:.34,tx:.2});
-  g+=cell({x:266+d.D,y:152,fmt:"BB",chem:"li",s:1.62,rot:-90,code:"BB·66",fs:.34,tx:.2});
-  g+='<path class="ln" d="M258 138L250 290H342L334 138"/>';
-  // trigger
-  g+='<path class="inkS" d="M258 150Q236 156 240 190L254 188Z"/>';
-  g+='<rect class="dv2" x="290" y="130" width="24" height="10" rx="2"/>';
-  // foot
-  g+='<rect class="dv" x="232" y="288" width="128" height="34" rx="9"/>';
-  for(i=0;i<5;i++){g+='<rect class="'+(i<4?'inkS':'bgf')+'" style="stroke:var(--ink);stroke-width:.8" x="'+(248+i*11)+'" y="301" width="8" height="8"/>';}
-  g+='<rect class="bgf" x="320" y="300" width="22" height="10" rx="5" style="stroke:var(--ink);stroke-width:1.2"/>';
-  // callouts
-  g+=callout(300,200,352,196,"GRIP = 2-SLOT BAY","P5 FOR FULL TORQUE");
-  g+=callout(270,305,160,300,"POWER GAUGE","THROTTLE SHOWN IN AMBER","end");
-  g+=callout(331,305,392,262,"USB-C PD 100 W","CHARGE IN PLACE");
-  g+=callout(146,64,146,26,"12-STEP CLUTCH","");
-  document.getElementById("p-dr1").innerHTML=svg("0 0 500 336",g,"DR-1 Brace drill driver with a clear grip holding two green BB cells");
+  var g='', cy=96, s=1.75, d=cellDims("BB",s);
+  g+='<rect class="steel" x="10" y="'+(cy-4)+'" width="58" height="8" rx="1"/>';
+  g+='<path class="dv2" d="M68 '+(cy-12)+'L96 '+(cy-17)+'V'+(cy+17)+'L68 '+(cy+12)+'Z"/>';
+  g+='<rect class="dv2" x="96" y="'+(cy-23)+'" width="24" height="46" rx="4"/>';
+  for(var i=0;i<6;i++){g+='<line class="thin" x1="'+f1(99+i*3.6)+'" y1="'+(cy-23)+'" x2="'+f1(99+i*3.6)+'" y2="'+(cy+23)+'"/>';}
+  g+='<rect class="dv" x="120" y="'+(cy-21)+'" width="84" height="42" rx="3"/>';
+  g+='<line x1="126" y1="'+(cy-21)+'" x2="126" y2="'+(cy+21)+'" style="stroke:var(--ink);stroke-width:3"/>';
+  g+='<rect class="inkS" x="146" y="'+(cy-27)+'" width="34" height="7" rx="3"/>';
+  var tx=204, tw=2*d.L+22, mx=tx+6+d.L+2;
+  g+='<rect class="bgf" x="'+tx+'" y="'+(cy-21)+'" width="'+f1(tw)+'" height="42" style="opacity:.6"/>';
+  g+=cell({x:tx+6,y:cy-d.D/2,fmt:"BB",chem:"li",s:s,code:"BB·74",fs:.42,tx:.2});
+  g+='<rect class="pcb" x="'+f1(mx)+'" y="'+(cy-17)+'" width="6" height="34"/>';
+  g+=cell({x:mx+8,y:cy-d.D/2,fmt:"BB",chem:"lfp",s:s,code:"BB·32",fs:.42,tx:.2});
+  g+='<rect class="gl" x="'+tx+'" y="'+(cy-21)+'" width="'+f1(tw)+'" height="42" rx="2"/>';
+  var ex=tx+tw;
+  g+='<rect class="dv2" x="'+f1(ex)+'" y="'+(cy-23)+'" width="30" height="46" rx="6"/>';
+  g+='<rect class="bgf" x="'+f1(ex+30)+'" y="'+(cy-6)+'" width="6" height="12" rx="2" style="stroke:var(--ink);stroke-width:1.2"/>';
+  g+=callout(40,cy-4,40,40,"¼\" HEX BIT","MAGNETIC HOLDER");
+  g+=callout(163,cy-27,172,40,"FWD / REV ROCKER","");
+  g+=callout(300,cy-21,318,40,"CLEAR TUBE","2 × BB, END TO END");
+  g+=callout(108,cy+23,100,156,"6-STEP TORQUE","COLLAR + LOCK","end");
+  g+=callout(Math.round(mx+3),cy+17,300,156,"MID CONTACT PLATE","RUNS ON 1 OR 2 CELLS","end");
+  g+=callout(Math.round(ex+33),cy+6,500,156,"USB-C IN THE TAIL","CELLS STAY IN","end");
+  document.getElementById("p-sd1").innerHTML=svg("0 0 520 178",g,"SD-1 Spindle screwdriver: a long clear tube holding a green and an orange BB cell end to end");
 })();
 
 /* RX-1 */
@@ -1357,18 +1512,18 @@ function callout(x1,y1,x2,y2,t1,t2,anchor){
 /* ================= CH-12 BARREL ================= */
 (function(){
   var POOL=[
-    {id:"BB74",soh:96,cyc:88, ir:28,st:"Full",v:"4.20 V · 100%",host:"FL-1 Wick"},
-    {id:"BB74",soh:91,cyc:212,ir:31,st:"Charging",v:"3.94 V · 82% · 18 min",host:"RX-1 Relay"},
-    {id:"B94", soh:99,cyc:12, ir:19,st:"Full",v:"4.20 V · 100%",host:"PB-4 Stack"},
+    {id:"BB74",soh:96,cyc:88, ir:28,st:"Full",v:"4.20 V · 100%",host:"Yesterday"},
+    {id:"BB74",soh:91,cyc:212,ir:31,st:"Charging",v:"3.94 V · 82% · 18 min",host:"Today"},
+    {id:"B94", soh:99,cyc:12, ir:19,st:"Full",v:"4.20 V · 100%",host:"4 days ago"},
     null,
-    {id:"BB32",soh:97,cyc:640,ir:22,st:"Storage",v:"3.30 V · 50%",host:"RX-1 Relay"},
-    {id:"B88", soh:93,cyc:150,ir:14,st:"Charging",v:"3.71 V · 41% · 34 min",host:"DR-1 Brace"},
-    {id:"BB66",soh:68,cyc:780,ir:58,st:"Retire",v:"Capacity 68% of rated · recycle",host:"DR-1 Brace"},
-    {id:"BBB22",soh:95,cyc:40,ir:61,st:"Full",v:"4.20 V · 100%",host:"Controller"},
-    {id:"B53", soh:100,cyc:3,ir:16,st:"Testing",v:"Discharging 1.4 A · 1.93 of 2.80 Ah",host:"New cell"},
+    {id:"BB32",soh:97,cyc:640,ir:22,st:"Storage",v:"3.30 V · 50%",host:"3 weeks ago"},
+    {id:"B88", soh:93,cyc:150,ir:14,st:"Charging",v:"3.71 V · 41% · 34 min",host:"Today"},
+    {id:"BB66",soh:68,cyc:780,ir:58,st:"Retire",v:"Health 68% · return for €3",host:"2 days ago"},
+    {id:"BBB22",soh:95,cyc:40,ir:61,st:"Full",v:"4.20 V · 100%",host:"6 hours ago"},
+    {id:"B53", soh:100,cyc:3,ir:16,st:"Testing",v:"Discharging 1.4 A · 1.93 of 2.80 Ah",host:"Never · new"},
     null,
-    {id:"BB74",soh:88,cyc:301,ir:34,st:"Storage",v:"3.80 V · 55%",host:"Controller"},
-    {id:"B94", soh:97,cyc:45, ir:20,st:"Charging",v:"4.05 V · 90% · 9 min",host:"FL-1 Wick"}
+    {id:"BB74",soh:88,cyc:301,ir:34,st:"Storage",v:"3.80 V · 55%",host:"2 months ago"},
+    {id:"B94", soh:97,cyc:45, ir:20,st:"Charging",v:"4.05 V · 90% · 9 min",host:"Today"}
   ];
   var C=200, R=118, g='', rot=0, sel=1;
   var RAD={B:30,BB:26,BBB:20};
@@ -1383,7 +1538,6 @@ function callout(x1,y1,x2,y2,t1,t2,anchor){
       var c=BY[p.id], r=RAD[c.fmt];
       inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="'+r+'" class="c-'+c.chem+'" style="stroke:rgba(0,0,0,.5);stroke-width:1"/>';
       inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="'+f1(r*.74)+'" class="c-cap"/>';
-      inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="'+f1(r*.58)+'" class="c-ring" style="stroke:#C9A640"/>';
       if(p.st==="Retire") inner+='<circle cx="'+f1(x)+'" cy="'+f1(y)+'" r="39" style="fill:none;stroke:var(--warn);stroke-width:3;stroke-dasharray:5 3"/>';
       inner+='<text class="c-capt" x="'+f1(x)+'" y="'+f1(y+3.4)+'" font-size="'+(c.fmt==="BBB"?7:8.5)+'" text-anchor="middle">'+c.code+'</text>';
     } else {
@@ -1425,7 +1579,7 @@ function callout(x1,y1,x2,y2,t1,t2,anchor){
       h+='<div class="row" style="color:var(--scr-ink)"><span>'+ch.name+' · '+ch.v.toFixed(1)+' V · '+c.wh.toFixed(1)+' Wh · '+Math.round(c.w)+' W</span></div>';
       h+='<div class="state'+(p.st==="Retire"?' retire':'')+'">'+p.st+' · '+p.v+'</div>';
       h+='<div class="row"><span>Health</span><span>'+p.soh+'%</span></div><div class="soh">'+bars+'</div>';
-      h+='<dl><div><dt>Cycles</dt><dd>'+p.cyc+'</dd></div><div><dt>Resistance</dt><dd>'+p.ir+' mΩ</dd></div><div><dt>Last host</dt><dd>'+p.host+'</dd></div></dl>';
+      h+='<dl><div><dt>Cycles</dt><dd>'+p.cyc+'</dd></div><div><dt>Resistance</dt><dd>'+p.ir+' mΩ</dd></div><div><dt>Last used</dt><dd>'+p.host+'</dd></div></dl>';
     }
     scr.innerHTML=h;
   }
@@ -1446,7 +1600,7 @@ function callout(x1,y1,x2,y2,t1,t2,anchor){
 
 /* ================= §6 BAY ================= */
 (function(){
-  var LOADS={radio:{avg:1.2,peak:6,name:"RX-1 radio"},light:{avg:5,peak:25,name:"FL-1 on high"},drill:{avg:40,peak:180,name:"DR-1 drill"}};
+  var LOADS={radio:{avg:1.2,peak:6,name:"RX-1 radio"},light:{avg:5,peak:25,name:"FL-1 on high"},sd:{avg:8,peak:40,name:"SD-1 screwdriver"},tool:{avg:120,peak:400,name:"18 V tool"}};
   var EFF=.92, sel=[document.getElementById("bay-s0"),document.getElementById("bay-s1"),document.getElementById("bay-s2")];
   var opts='<option value="">Empty</option>'+CELLS.map(function(c){return '<option value="'+c.id+'">'+c.code+' · '+CHEM[c.chem].name+' · '+c.wh.toFixed(1)+' Wh · '+Math.round(c.w)+' W</option>';}).join("");
   var init=["B94","BB32",""];
