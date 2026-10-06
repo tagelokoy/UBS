@@ -1,0 +1,39 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Martian+Mono:wdth,wght@75..112.5,300..700&display=swap">
+<title>CH-1 Pip display</title>
+<style>
+/* CH-1 Pip display, 4:3. Rendered at 3x (960 x 720). */
+html,body{margin:0;background:#000}
+#scr{width:320px;height:240px;background:#000;color:#F2F5F1;position:relative;font-family:"Archivo",Arial,sans-serif;overflow:hidden}
+.m{font-family:"Martian Mono",monospace;font-stretch:80%;letter-spacing:.8px;text-transform:uppercase}
+.dim{color:#7D8781}
+svg{position:absolute;left:14px;top:32px}
+.pct{position:absolute;left:14px;top:32px;width:176px;height:176px;display:grid;place-items:center;text-align:center}
+.pct b{display:block;font-weight:800;font-stretch:112%;font-size:62px;line-height:.9;letter-spacing:-2px}
+.pct span{display:block;font-size:9px;margin-top:6px}
+.top{position:absolute;left:16px;right:16px;top:12px;display:flex;justify-content:space-between;font-size:9px}
+.side{position:absolute;left:204px;right:14px;top:36px;display:grid;gap:7px}
+.code{display:flex;align-items:center;gap:7px;font-weight:850;font-stretch:108%;font-size:24px;letter-spacing:-.5px;line-height:1}
+.code i{width:6px;height:22px;border-radius:1.5px;background:#2FE070;display:block}
+.row{display:grid;gap:1px;border-top:1px solid #262A28;padding-top:6px}
+.row .k{font-size:8px}
+.row .v{font-size:12px;font-variant-numeric:tabular-nums}
+</style></head><body>
+<div id="scr">
+  <div class="top m"><span>CH-1</span><span class="dim">USB-C 5 V · 3 A</span></div>
+  <svg width="176" height="176" viewBox="0 0 176 176">
+    <circle cx="88" cy="88" r="76" fill="none" stroke="#1C1F1D" stroke-width="9"/>
+    <circle cx="88" cy="88" r="76" fill="none" stroke="#2FE070" stroke-width="9" stroke-linecap="round"
+      stroke-dasharray="391.6 477.5" transform="rotate(-90 88 88)"/>
+    <g stroke="#7D8781" stroke-width="1.2">
+      <line x1="88" y1="4" x2="88" y2="0"/><line x1="172" y1="88" x2="176" y2="88"/><line x1="88" y1="172" x2="88" y2="176"/><line x1="4" y1="88" x2="0" y2="88"/>
+    </g>
+  </svg>
+  <div class="pct"><div><b>82</b><span class="m dim">% · charging</span></div></div>
+  <div class="side">
+    <div class="code"><i></i>BB·74</div>
+    <div class="row m"><span class="k dim">Health</span><span class="v">91%</span></div>
+    <div class="row m"><span class="k dim">Current</span><span class="v">2.4 A</span></div>
+    <div class="row m"><span class="k dim">Full in</span><span class="v">18 min</span></div>
+    <div class="row m"><span class="k dim">Cycle</span><span class="v">212</span></div>
+  </div>
+</div></body></html>
