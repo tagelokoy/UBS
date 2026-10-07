@@ -27,6 +27,7 @@ ap.add_argument("--el", type=float, help="camera elevation, degrees")
 ap.add_argument("--dist", type=float, help="camera distance, Blender units")
 ap.add_argument("--tx", type=float, help="camera target along the cell, Blender units")
 ap.add_argument("--blend", action="store_true", help="also save a .blend next to the image")
+ap.add_argument("--t", type=float, help="0..1 position in the explode clip; sets explode and camera")
 args = ap.parse_args(argv)
 
 # camera presets: azimuth, elevation (degrees), distance, target x (Blender units)
@@ -36,6 +37,8 @@ VIEWS = {
     "side":     (0, 3, 26, 0.0),      # straight side-on
     "top":      (-30, 38, 26, 0.0),   # high three-quarter
     "negative": (-62, 14, 22, -1.0),  # from the negative end
+    "end":      (78, 9, 17, 2.4),     # nearly end-on: the cap face, a sliver of the side
+    "open":     (55, 16, 24, 3.0),    # where the explode clip ends: looking into the opened cap
 }
 
 MM = 0.1          # Blender units per mm
@@ -219,12 +222,19 @@ box("bb74-board-chip-1", 0.6, 2, 2, 64.8, 2.5, -2.5, parent=board)
 box("bb74-board-chip-2", 0.6, 1.5, 3, 64.8, -3.0, -1.0, parent=board)
 box("bb74-board-chip-3", 0.6, 1.5, 1.5, 64.8, 1.0, 3.5, parent=board)
 ptc = ring("bb74-ptc", 14.0, 8.0, 66.5, 0.6, "al-silver")
+cylinder("bb74-can-top", 17.4, 60.9, 61.05, "nickel")  # the steel can under the cap
 
-# explode: same moves as the site (mm)
-e = max(0.0, min(1.0, args.explode))
-for ob, d in [(ntc, 3), (nfc, 7), (board, 11.5), (ptc, 16)] + [(o, 20) for o in [cap, ins, btn] + grooves]:
+def smooth(x):
+    x = max(0.0, min(1.0, x))
+    return x * x * (3 - 2 * x)
+
+
+# explode: the cap and the parts under it slide out along +X (mm at e = 1).
+# In the clip (--t) the parts start moving a beat after the camera and settle before it.
+e = smooth((args.t - 0.1) / 0.75) if args.t is not None else max(0.0, min(1.0, args.explode))
+for ob, d in [(ntc, 6), (nfc, 14), (board, 24), (ptc, 34)] + [(o, 46) for o in [cap, ins, btn] + grooves]:
     ob.location.x += d * MM * e
-cell.location.x = -10 * MM * e
+cell.location.x = -23 * MM * e
 cell.rotation_euler.x = math.radians(args.turn)
 
 # ---------------------------------------------------------------- stage
@@ -273,8 +283,9 @@ scene.world = world
 
 # camera: a preset, with any of its numbers overridden from the command line
 v_az, v_el, v_dist, v_tx = VIEWS[args.view]
-if args.view == "hero" and e > 0:
-    v_dist, v_tx = 30.0, 0.0
+if args.t is not None:  # the clip: glide from the hero view to the open view
+    k = smooth(args.t)
+    v_az, v_el, v_dist, v_tx = (a + (b - a) * k for a, b in zip(VIEWS["hero"], VIEWS["open"]))
 v_az = v_az if args.az is None else args.az
 v_el = v_el if args.el is None else args.el
 v_dist = v_dist if args.dist is None else args.dist
