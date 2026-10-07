@@ -75,8 +75,7 @@ p{margin:0;max-width:64ch}
 
 /* ---------- hero ---------- */
 .hero{position:relative;padding-block:clamp(40px,7vw,96px) clamp(32px,5vw,64px);overflow:hidden}
-.hero-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,64px);align-items:center}
-@media (max-width:960px){.hero-grid{grid-template-columns:1fr}}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center}
 .hero h1{font-size:clamp(64px,11.5vw,168px);line-height:.84;font-weight:900;font-stretch:125%;text-transform:uppercase;letter-spacing:-.03em;margin-block:18px 26px}
 .hero h1 span{display:block}
 .hero .lede{color:var(--ink)}
@@ -85,8 +84,25 @@ p{margin:0;max-width:64ch}
 .btn.solid{background:var(--ink);color:var(--bg)}
 .btn:hover{background:var(--ink);color:var(--bg)}
 .btn.solid:hover{background:transparent;color:var(--ink)}
-.hero-fig{position:relative}
+/* ---------- fig. 01 · inside the cell (3D, pinned while it opens) ---------- */
+.inside{position:relative;padding-block:clamp(16px,3vw,40px)}
+.inside.pin{height:260vh;padding-block:0}
+.inside.pin .inside-pin{position:sticky;top:58px;height:calc(100vh - 58px);display:flex;align-items:center}
+.inside-pin>.wrap{width:100%}
+.hero-fig{position:relative;margin-inline:auto;width:min(100%,1100px)}
+.inside.pin .hero-fig{width:min(100%,1100px,(100vh - 58px - 120px)*1.86)}
 .hero-fig svg{width:100%;height:auto;display:block}
+.hero-3d{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;pointer-events:none;transition:opacity .8s ease}
+#hero-svg{transition:opacity .8s ease}
+.hero-fig.live .hero-3d{opacity:1}
+.hero-fig.live #hero-svg{opacity:0}
+.inside-steps{list-style:none;margin:18px auto 0;padding:14px 0 0;width:min(100%,1100px);border-top:1.5px solid var(--ink);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;font-family:var(--fm);font-stretch:87%;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+.inside-steps li{transition:color .4s ease}
+.inside-steps li.on{color:var(--ink)}
+.inside-steps .k{background:var(--ink-3);color:var(--bg);padding:2px 6px;margin-right:6px;transition:background .4s ease}
+.inside-steps li.on .k{background:var(--ink)}
+.inside:not(.pin) .inside-steps{display:none}
+@media (max-width:640px){.inside-steps{grid-template-columns:1fr;gap:6px}}
 .jp{position:absolute;right:-4px;top:0;writing-mode:vertical-rl;font-family:var(--fj);font-weight:700;font-size:13px;letter-spacing:.35em;color:var(--ink-3)}
 @media (max-width:960px){.jp{display:none}}
 .facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1.5px solid var(--ink);margin-top:clamp(32px,5vw,56px)}
@@ -473,16 +489,29 @@ footer .tag{color:inherit;opacity:.6}
           <a class="btn" href="#products">See the hardware</a>
         </div>
       </div>
-      <div class="hero-fig">
-        <span class="jp" lang="ja">汎用バッテリーシステム</span>
-        <div id="hero-svg"></div>
-      </div>
     </div>
     <div class="facts">
       <div><b class="num">3</b><span class="tag">Sizes · B, BB, BBB</span></div>
       <div><b class="num">2+1</b><span class="tag">Chemistries · 1 reserved</span></div>
       <div><b class="num">1</b><span class="tag">Code for energy + power</span></div>
       <div><b class="num">0</b><span class="tag">Proprietary packs</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FIG. 01 · INSIDE THE CELL ================= -->
+<section class="inside" aria-label="Inside a UBS cell">
+  <div class="inside-pin">
+    <div class="wrap">
+      <div class="hero-fig">
+        <span class="jp" lang="ja">汎用バッテリーシステム</span>
+        <div id="hero-svg"></div>
+      </div>
+      <ol class="inside-steps" aria-hidden="true">
+        <li><span class="k">§2</span> One band = Li-ion</li>
+        <li><span class="k">§3</span> Protection circuit · inside the cap</li>
+        <li><span class="k">§4</span> NFC passport · tap to read</li>
+      </ol>
     </div>
   </div>
 </section>
@@ -1188,6 +1217,85 @@ function cellDims(fmt,s){var f=FMT[fmt];return {L:f.L*s,D:f.d*s};}
   g+='<text class="lbl k" x="'+(x-22)+'" y="'+f1(y+d.D/2)+'" text-anchor="middle" transform="rotate(-90 '+(x-22)+' '+f1(y+d.D/2)+')">Ø 18.6</text>';
   g+='<text class="lbl" x="'+f1(x+d.L)+'" y="'+(dy+26)+'" text-anchor="end">FIG. 01 · UBS BB CELL · ANODYNE BB·74</text>';
   document.getElementById("hero-svg").innerHTML=svg("0 0 620 "+(dy+34),g,"A UBS BB cell with callouts: one chemistry band, NFC passport, protection circuit and the rating code BB·74");
+})();
+
+/* ================= FIG. 01 · 3D CELL (Spline) =================
+   Loads the BB·74 scene over the drawing when the section comes near. The SVG stays
+   underneath as poster and fallback. The section pins while you scroll through it and
+   the scroll position opens the cell, so it is fully apart before the page moves on.
+   The canvas takes no input, so it never captures scroll or zoom. Parts are driven by
+   name (see spline/01-bb74-cell.md). */
+(function(){
+  var SCENE="https://prod.spline.design/WKJ1oR2NgWgmhLve/scene.splinecode",
+      RUNTIME="https://cdn.jsdelivr.net/npm/@splinetool/runtime@2.0.73/build/runtime.js";
+  var sec=document.querySelector(".inside"), fig=sec&&sec.querySelector(".hero-fig");
+  if(!fig||!("IntersectionObserver" in window))return;
+  try{var probe=document.createElement("canvas");if(!(probe.getContext("webgl2")||probe.getContext("webgl")))return;}catch(e){return;}
+  var still=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var steps=[].slice.call(sec.querySelectorAll(".inside-steps li"));
+  if(!still)sec.classList.add("pin");
+  var cv=document.createElement("canvas");
+  cv.className="hero-3d";cv.setAttribute("aria-hidden","true");
+  function fail(){cv.remove();sec.classList.remove("pin");}
+  var io=new IntersectionObserver(function(es){
+    if(!es.some(function(e){return e.isIntersecting;}))return;
+    io.disconnect();
+    fig.appendChild(cv);
+    import(RUNTIME).then(function(m){
+      var app=new m.Application(cv);
+      return app.load(SCENE).then(function(){return app;});
+    }).then(run).catch(fail);
+  },{rootMargin:"600px"});
+  io.observe(sec);
+
+  function run(app){
+    var cell=app.findObjectByName("bb74"), cam=app.findObjectByName("hero-camera");
+    if(!cell){fail();return;}
+    // The scene's own background is opaque, so paint it with the page colour (follows the theme).
+    function syncBg(){app.setBackgroundColor(getComputedStyle(document.body).backgroundColor);}
+    syncBg();
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",syncBg);
+    // Pull the camera back along its line of sight so the opened cell fits the frame.
+    if(cam){
+      var T={x:40,y:0,z:0}, p=cam.position, dx=p.x-T.x, dy=p.y-T.y, dz=p.z-T.z, d=Math.hypot(dx,dy,dz), D=1480;
+      cam.position.x=T.x+dx/d*D;cam.position.y=T.y+dy/d*D;cam.position.z=T.z+dz/d*D;
+    }
+    fig.classList.add("live");
+    if(still)return;
+    // Parts that slide out along +X as the cell opens, and how far (10 units = 1 mm).
+    var OUT=[["bb74-ntc",30],["bb74-nfc",70],["bb74-board",115],["bb74-ptc",160],
+      ["bb74-cap",200],["bb74-groove-1",200],["bb74-groove-2",200],["bb74-insulator",200],["bb74-button",200]]
+      .map(function(q){var o=app.findObjectByName(q[0]);return o?{o:o,x:o.position.x,d:q[1]}:null;})
+      .filter(Boolean);
+    var cx=cell.position.x, rx=cell.rotation.x, ry=cell.rotation.y, rz=cell.rotation.z;
+    var mx=0,my=0,sx=0,sy=0,se=0,t0=performance.now(),raf=0,onScreen=true;
+    window.addEventListener("pointermove",function(e){
+      var r=fig.getBoundingClientRect();
+      mx=Math.max(-1,Math.min(1,(e.clientX-(r.left+r.width/2))/(r.width/2)));
+      my=Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/(r.height/2)));
+    },{passive:true});
+    new IntersectionObserver(function(es){onScreen=es[0].isIntersecting;wake();}).observe(sec);
+    document.addEventListener("visibilitychange",wake);
+    function wake(){if(onScreen&&!document.hidden&&!raf)raf=requestAnimationFrame(tick);}
+    function tick(now){
+      raf=0;
+      if(!onScreen||document.hidden)return;
+      // 0 when the section pins, 1 when it is about to scroll away. Hold a beat at both ends.
+      var r=sec.getBoundingClientRect(), span=r.height-(window.innerHeight-58);
+      var p=Math.max(0,Math.min(1,(58-r.top)/Math.max(1,span)));
+      var q=Math.max(0,Math.min(1,(p-.12)/.7)), e=q*q*(3-2*q);
+      steps.forEach(function(li,i){li.classList.toggle("on",i===0?p>.04:e>(i===1?.35:.75));});
+      sx+=(mx-sx)*.06;sy+=(my-sy)*.06;se+=(e-se)*.15;
+      var t=(now-t0)/1000;
+      cell.rotation.x=rx+Math.sin(t*.45)*.3;   // slow turn about its own axis
+      cell.rotation.y=ry-sx*.08;               // tilt toward the cursor
+      cell.rotation.z=rz-sy*.05;
+      cell.position.x=cx-100*se;               // keep the opened cell centred
+      OUT.forEach(function(o){o.o.position.x=o.x+o.d*se;});
+      raf=requestAnimationFrame(tick);
+    }
+    wake();
+  }
 })();
 
 /* ================= §1 FORMATS ================= */
