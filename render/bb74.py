@@ -33,6 +33,7 @@ args = ap.parse_args(argv)
 # camera presets: azimuth, elevation (degrees), distance, target x (Blender units)
 VIEWS = {
     "hero":     (-20, 12, 26, 0.4),   # the brief's framing: a little above, a little left
+    "hero-r":   (20, 12, 26, -0.4),   # the same, mirrored: front-on with a glimpse of the + cap
     "button":   (62, 16, 22, 1.0),    # from the + end: cap, grooves and button face
     "side":     (0, 3, 26, 0.0),      # straight side-on
     "top":      (-30, 38, 26, 0.0),   # high three-quarter
@@ -86,6 +87,7 @@ MAT = {
     "black-satin": material("black-satin", "#141716", 0.0, 0.6),
     "pcb": material("pcb", "#1B2A23", 0.0, 0.5),
     "chip": material("chip", "#07090A", 0.0, 0.3),
+    "gold": material("gold", "#D4A94E", 1.0, 0.28),
 }
 
 
@@ -223,6 +225,12 @@ box("bb74-board-chip-2", 0.6, 1.5, 3, 64.8, -3.0, -1.0, parent=board)
 box("bb74-board-chip-3", 0.6, 1.5, 1.5, 64.8, 1.0, 3.5, parent=board)
 ptc = ring("bb74-ptc", 14.0, 8.0, 66.5, 0.6, "al-silver")
 cylinder("bb74-can-top", 17.4, 60.9, 61.05, "nickel")  # the steel can under the cap
+# gold detail so the boards read against the black: an antenna coil and contact pads
+for i, (do, di) in enumerate(((8.4, 7.8), (7.2, 6.6), (6.0, 5.4))):
+    ring("bb74-nfc-coil-%d" % i, do, di, 62.72, 0.04, "gold", parent=nfc)
+for i, (y, z, w, d) in enumerate(((5.5, 0, 1.6, 1.0), (-5.5, 0, 1.6, 1.0), (0, 5.5, 1.0, 1.6),
+                                  (-1.5, -5.6, 1.0, 1.6), (4.2, 4.2, 0.8, 0.8), (-4.6, 3.4, 0.8, 0.8))):
+    box("bb74-board-pad-%d" % i, 0.05, w, d, 64.52, y, z, mat="gold", parent=board)
 
 def smooth(x):
     x = max(0.0, min(1.0, x))
@@ -286,6 +294,7 @@ v_az, v_el, v_dist, v_tx = VIEWS[args.view]
 if args.t is not None:  # the clip: glide from the hero view to the open view
     k = smooth(args.t)
     v_az, v_el, v_dist, v_tx = (a + (b - a) * k for a, b in zip(VIEWS["hero"], VIEWS["open"]))
+    v_el += 10 * math.sin(math.pi * k)  # arc up mid-way so the move never goes flat side-on
 v_az = v_az if args.az is None else args.az
 v_el = v_el if args.el is None else args.el
 v_dist = v_dist if args.dist is None else args.dist
