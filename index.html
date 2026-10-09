@@ -84,18 +84,22 @@ p{margin:0;max-width:64ch}
 .btn.solid{background:var(--ink);color:var(--bg)}
 .btn:hover{background:var(--ink);color:var(--bg)}
 .btn.solid:hover{background:transparent;color:var(--ink)}
-/* ---------- fig. 01 · inside the cell (3D, pinned while it opens) ---------- */
+/* ---------- fig. 01 · inside the cell (rendered clip, pinned while it plays) ---------- */
 .inside{position:relative;padding-block:clamp(16px,3vw,40px)}
 .inside.pin{height:260vh;padding-block:0}
 .inside.pin .inside-pin{position:sticky;top:58px;height:calc(100vh - 58px);display:flex;align-items:center}
 .inside-pin>.wrap{width:100%}
 .hero-fig{position:relative;margin-inline:auto;width:min(100%,1100px)}
-.inside.pin .hero-fig{width:min(100%,1100px,(100vh - 58px - 120px)*1.86)}
+.inside.pin .hero-fig{width:min(100%,1100px,(100vh - 58px - 120px)*1.78)}
 .hero-fig svg{width:100%;height:auto;display:block}
-.hero-3d{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;pointer-events:none;transition:opacity .8s ease}
+.hero-3d{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;pointer-events:none;transition:opacity .8s ease;
+  /* soft edges, so the baked-in background never shows as a rectangle */
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent),linear-gradient(transparent,#000 6%,#000 94%,transparent);
+  -webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent),linear-gradient(transparent,#000 6%,#000 94%,transparent);mask-composite:intersect}
 #hero-svg{transition:opacity .8s ease}
+.hero-fig.live{aspect-ratio:16/9}
 .hero-fig.live .hero-3d{opacity:1}
-.hero-fig.live #hero-svg{opacity:0}
+.hero-fig.live #hero-svg{position:absolute;inset:0;opacity:0}
 .inside-steps{list-style:none;margin:18px auto 0;padding:14px 0 0;width:min(100%,1100px);border-top:1.5px solid var(--ink);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;font-family:var(--fm);font-stretch:87%;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
 .inside-steps li{transition:color .4s ease}
 .inside-steps li.on{color:var(--ink)}
@@ -1219,82 +1223,79 @@ function cellDims(fmt,s){var f=FMT[fmt];return {L:f.L*s,D:f.d*s};}
   document.getElementById("hero-svg").innerHTML=svg("0 0 620 "+(dy+34),g,"A UBS BB cell with callouts: one chemistry band, NFC passport, protection circuit and the rating code BB·74");
 })();
 
-/* ================= FIG. 01 · 3D CELL (Spline) =================
-   Loads the BB·74 scene over the drawing when the section comes near. The SVG stays
-   underneath as poster and fallback. The section pins while you scroll through it and
-   the scroll position opens the cell, so it is fully apart before the page moves on.
-   The canvas takes no input, so it never captures scroll or zoom. Parts are driven by
-   name (see spline/01-bb74-cell.md). */
+/* ================= FIG. 01 · THE CELL OPENS (rendered clip) =================
+   A pre-rendered image sequence (render/bb74.py + render/sequence.sh) played by
+   scroll, the way product pages do it. The section pins and the scroll position
+   picks the frame, so the cell is fully open before the page moves on. The SVG
+   drawing stays underneath as poster and fallback. The page colour is baked into
+   the frames, so there is a light and a dark set; the page loads the one that
+   matches. Phones get a smaller set. */
 (function(){
-  var SCENE="https://prod.spline.design/WKJ1oR2NgWgmhLve/scene.splinecode",
-      RUNTIME="https://cdn.jsdelivr.net/npm/@splinetool/runtime@2.0.73/build/runtime.js";
+  var N=90, dark=window.matchMedia("(prefers-color-scheme: dark)");
+  function dir(){return "img/bb74-open/"+(dark.matches?"dark/":"light/")+(window.innerWidth<760?"m/":"");}
+  var DIR=dir();
   var sec=document.querySelector(".inside"), fig=sec&&sec.querySelector(".hero-fig");
-  if(!fig||!("IntersectionObserver" in window))return;
-  try{var probe=document.createElement("canvas");if(!(probe.getContext("webgl2")||probe.getContext("webgl")))return;}catch(e){return;}
+  if(!fig)return;
   var still=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var steps=[].slice.call(sec.querySelectorAll(".inside-steps li"));
-  if(!still)sec.classList.add("pin");
-  var cv=document.createElement("canvas");
+  var cv=document.createElement("canvas"), ctx=cv.getContext("2d");
   cv.className="hero-3d";cv.setAttribute("aria-hidden","true");
-  function fail(){cv.remove();sec.classList.remove("pin");}
+  var frames=new Array(N), shown=-1, want=still?N-1:0;
+  function src(i){return DIR+"f"+String(i).padStart(3,"0")+".webp";}
+  function size(){
+    var r=fig.getBoundingClientRect(), d=window.devicePixelRatio||1;
+    cv.width=Math.round(r.width*d);cv.height=Math.round(r.width*9/16*d);shown=-1;draw();
+  }
+  function draw(){
+    // the nearest loaded frame to the one the scroll asks for
+    var i=want;
+    if(!frames[i]||!frames[i].ok){
+      for(var k=1;k<N;k++){
+        if(frames[i-k]&&frames[i-k].ok){i=i-k;break;}
+        if(frames[i+k]&&frames[i+k].ok){i=i+k;break;}
+      }
+    }
+    if(i===shown||!frames[i]||!frames[i].ok)return;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.drawImage(frames[i].img,0,0,cv.width,cv.height);
+    shown=i;
+  }
+  function load(i,done){
+    if(frames[i])return done&&done();
+    var img=new Image(), f=frames[i]={img:img,ok:false};
+    img.decoding="async";
+    img.onload=function(){f.ok=true;if(Math.abs(i-want)<=Math.abs(shown-want)||shown<0)draw();done&&done();};
+    img.onerror=function(){done&&done();};
+    img.src=src(i);
+  }
   var io=new IntersectionObserver(function(es){
     if(!es.some(function(e){return e.isIntersecting;}))return;
     io.disconnect();
-    fig.appendChild(cv);
-    import(RUNTIME).then(function(m){
-      var app=new m.Application(cv);
-      return app.load(SCENE).then(function(){return app;});
-    }).then(run).catch(fail);
-  },{rootMargin:"600px"});
+    load(want,function(){
+      if(!frames[want].ok)return;  // no frames: keep the drawing
+      fig.appendChild(cv);size();fig.classList.add("live");
+      window.addEventListener("resize",size);
+      dark.addEventListener("change",function(){  // theme switched: swap to the other set
+        DIR=dir();shown=-1;frames.forEach(function(f,i){if(f){f.ok=false;f.img.onload=function(){f.ok=true;draw();};f.img.src=src(i);}});
+      });
+      if(still)return;
+      sec.classList.add("pin");
+      // first, last, then fill in coarse to fine so scrubbing works early
+      var order=[N-1],seen={};seen[0]=seen[N-1]=1;
+      [16,8,4,2,1].forEach(function(s){for(var i=0;i<N;i+=s)if(!seen[i]){seen[i]=1;order.push(i);}});
+      (function next(){if(order.length)load(order.shift(),next);})();
+      window.addEventListener("scroll",onScroll,{passive:true});
+      onScroll();
+    });
+  },{rootMargin:"800px"});
   io.observe(sec);
-
-  function run(app){
-    var cell=app.findObjectByName("bb74"), cam=app.findObjectByName("hero-camera");
-    if(!cell){fail();return;}
-    // The scene's own background is opaque, so paint it with the page colour (follows the theme).
-    function syncBg(){app.setBackgroundColor(getComputedStyle(document.body).backgroundColor);}
-    syncBg();
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",syncBg);
-    // Pull the camera back along its line of sight so the opened cell fits the frame.
-    if(cam){
-      var T={x:40,y:0,z:0}, p=cam.position, dx=p.x-T.x, dy=p.y-T.y, dz=p.z-T.z, d=Math.hypot(dx,dy,dz), D=1480;
-      cam.position.x=T.x+dx/d*D;cam.position.y=T.y+dy/d*D;cam.position.z=T.z+dz/d*D;
-    }
-    fig.classList.add("live");
-    if(still)return;
-    // Parts that slide out along +X as the cell opens, and how far (10 units = 1 mm).
-    var OUT=[["bb74-ntc",30],["bb74-nfc",70],["bb74-board",115],["bb74-ptc",160],
-      ["bb74-cap",200],["bb74-groove-1",200],["bb74-groove-2",200],["bb74-insulator",200],["bb74-button",200]]
-      .map(function(q){var o=app.findObjectByName(q[0]);return o?{o:o,x:o.position.x,d:q[1]}:null;})
-      .filter(Boolean);
-    var cx=cell.position.x, rx=cell.rotation.x, ry=cell.rotation.y, rz=cell.rotation.z;
-    var mx=0,my=0,sx=0,sy=0,se=0,t0=performance.now(),raf=0,onScreen=true;
-    window.addEventListener("pointermove",function(e){
-      var r=fig.getBoundingClientRect();
-      mx=Math.max(-1,Math.min(1,(e.clientX-(r.left+r.width/2))/(r.width/2)));
-      my=Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/(r.height/2)));
-    },{passive:true});
-    new IntersectionObserver(function(es){onScreen=es[0].isIntersecting;wake();}).observe(sec);
-    document.addEventListener("visibilitychange",wake);
-    function wake(){if(onScreen&&!document.hidden&&!raf)raf=requestAnimationFrame(tick);}
-    function tick(now){
-      raf=0;
-      if(!onScreen||document.hidden)return;
-      // 0 when the section pins, 1 when it is about to scroll away. Hold a beat at both ends.
-      var r=sec.getBoundingClientRect(), span=r.height-(window.innerHeight-58);
-      var p=Math.max(0,Math.min(1,(58-r.top)/Math.max(1,span)));
-      var q=Math.max(0,Math.min(1,(p-.12)/.7)), e=q*q*(3-2*q);
-      steps.forEach(function(li,i){li.classList.toggle("on",i===0?p>.04:e>(i===1?.35:.75));});
-      sx+=(mx-sx)*.06;sy+=(my-sy)*.06;se+=(e-se)*.15;
-      var t=(now-t0)/1000;
-      cell.rotation.x=rx+Math.sin(t*.45)*.3;   // slow turn about its own axis
-      cell.rotation.y=ry-sx*.08;               // tilt toward the cursor
-      cell.rotation.z=rz-sy*.05;
-      cell.position.x=cx-100*se;               // keep the opened cell centred
-      OUT.forEach(function(o){o.o.position.x=o.x+o.d*se;});
-      raf=requestAnimationFrame(tick);
-    }
-    wake();
+  function onScroll(){
+    var r=sec.getBoundingClientRect(), span=r.height-(window.innerHeight-58);
+    var p=Math.max(0,Math.min(1,(58-r.top)/Math.max(1,span)));
+    var t=Math.max(0,Math.min(1,(p-.06)/.88));       // hold a beat at both ends
+    want=Math.round(t*(N-1));draw();
+    var e=Math.max(0,Math.min(1,(t-.1)/.75));          // the parts' timing inside the clip
+    steps.forEach(function(li,i){li.classList.toggle("on",i===0?p>.03:e>(i===1?.45:.8));});
   }
 })();
 
